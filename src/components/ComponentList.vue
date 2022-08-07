@@ -1,5 +1,6 @@
 <template>
   <div>
+<<<<<<< HEAD
     <h3 ref="h3ref">组件选择</h3>
     <div class="item-list" ref="haha">
       <div
@@ -11,12 +12,20 @@
         <img :src="item.icon" :alt="item.title" class="item-img" />
         <p>{{ item.title }}</p>
         <input v-if="showInput" type="text">
+=======
+    <h3>组件选择</h3>
+    <div class="item-list">
+      <div v-for="item in list" :key="item.id" class="item">
+        <img :src="item.icon" :alt="item.title" class="item-img" />
+        <p>{{ item.title }}</p>
+>>>>>>> 60f1bbb (编辑页面)
       </div>
     </div>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import { ref, onMounted, defineProps,computed } from "vue";
 
 export default {
@@ -112,6 +121,67 @@ export default {
     };
   },
 };
+=======
+import { reactive } from 'vue'
+import elStore from '../store/elStore'
+import { v4 as uuidv4 } from "uuid";
+export default {
+  name: 'ComponentList',
+  setup() {
+    const useElStore = elStore();
+    const list = [
+      { id: 1, title: '盒子', icon: require('../assets/' + 'hezi.png') },
+      { id: 2, title: '文字', icon: require('../assets/' + 'wenzi.png') },
+      { id: 3, title: '图片', icon: require('../assets/' + 'tupian.png') },
+      { id: 4, title: '按钮', icon: require('../assets/' + 'chukong.png') },
+      { id: 5, title: '表单', icon: require('../assets/' + 'biaodan.png') },
+    ];
+    //要保存的全部Dom 只是用来测试
+    let els = reactive([
+      //文本框
+      [
+        {
+          id: uuidv4(),
+          class: "text",
+          width: 100,
+          left: 0,
+          top: 0,
+          height: undefined,
+          rotate: 0,
+          fontSize: 16,
+
+          isEditable: false, //是否处于编辑状态
+          content: "双击可编辑文字",
+        },
+      ],
+      //矩形框
+      [
+        {
+          id: uuidv4(),
+          class: "el",
+          width: 100,
+          height: 100,
+          left: 100,
+          top: 100,
+          rotate: 0,
+        },
+        {
+          id: uuidv4(),
+          class: "el",
+          width: 100,
+          height: 100,
+          left: 200,
+          top: 300,
+          rotate: 0,
+        },
+      ],
+    ]);
+
+    useElStore.els = els;
+    return {list}
+  }
+}
+>>>>>>> 60f1bbb (编辑页面)
 </script>
 
 <style lang="less" scoped>
@@ -152,4 +222,8 @@ h3 {
     }
   }
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> 60f1bbb (编辑页面)
