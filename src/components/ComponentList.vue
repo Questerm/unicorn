@@ -1,187 +1,153 @@
 <template>
   <div>
-<<<<<<< HEAD
     <h3 ref="h3ref">组件选择</h3>
     <div class="item-list" ref="haha">
       <div
         v-for="item in list"
         :key="item.id"
         class="item"
-        @click="newSomething(item.id)"
+        @click="newSomething(item.id-1)"
       >
         <img :src="item.icon" :alt="item.title" class="item-img" />
         <p>{{ item.title }}</p>
-        <input v-if="showInput" type="text">
-=======
-    <h3>组件选择</h3>
-    <div class="item-list">
-      <div v-for="item in list" :key="item.id" class="item">
-        <img :src="item.icon" :alt="item.title" class="item-img" />
-        <p>{{ item.title }}</p>
->>>>>>> 60f1bbb (编辑页面)
+        <input type="file" v-if="item.id === 3" class="imgInput" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-import { ref, onMounted, defineProps,computed } from "vue";
+import { v4 as uuidv4 } from "uuid";
+import elStore from "@/store/elStore";
+import { reactive } from '@vue/reactivity';
 
 export default {
   name: "ComponentList",
-  data() {
-    return {
-      list: [
-        { id: 1, title: "盒子", icon: require("../assets/" + "hezi.png") },
-        { id: 2, title: "文字", icon: require("../assets/" + "wenzi.png") },
-        { id: 3, title: "图片", icon: require("../assets/" + "tupian.png") },
-        { id: 4, title: "按钮", icon: require("../assets/" + "chukong.png") },
-        { id: 5, title: "表单", icon: require("../assets/" + "biaodan.png") },
-      ],
-    };
-  },
-  props: {
-  },
-  setup(props) {
-    let showInput = computed(() => {
-      return item.id===3
-    });
-    let write;
-    onMounted(() => {
-      write = document.getElementsByClassName("write")[0];
-      console.log(write);
-    });
+  setup() {
+    let useElStore = elStore();
+    //组件列表
+    const list = [
+      { id: 1, title: "盒子", icon: require("../assets/" + "hezi.png") },
+      { id: 2, title: "文字", icon: require("../assets/" + "wenzi.png") },
+      { id: 3, title: "图片", icon: require("../assets/" + "tupian.png") },
+      { id: 4, title: "按钮", icon: require("../assets/" + "chukong.png") },
+      { id: 5, title: "表单", icon: require("../assets/" + "biaodan.png") },
+    ];
+
+    let els = reactive( Array.from(new Array(list.length), () => []));
+    useElStore.els = els;
     const newSomething = (id) => {
-        switch (id) {
-          case 1:
-            console.log(write);
-            if (write) {
-             write.appendChild(newBox());
-            }
-            break;
-          case 2:
-            console.log("文字");
-            if(write){
-              write.appendChild(newWord());
-            }
-            break;
-          case 3:
-            console.log("图片");
-            break;
-          case 4:
-            console.log("按钮");
-            break;
-          case 5:
-            console.log("表单");
-            break;
-        }
+      let t = createEl[id];
+      t.id = uuidv4();
+      els[id].push(t);
+    };
+
+    const createEl = [
+      //创建盒子
+      {
+        class: "box",
+        style: {
+          width: 200,
+          height: 200,
+          top: 200,
+          left: 200,
+          rotate: 0,
+          borderRadius: 0,
+          borderStyle: "solid",
+          borderColor: "#000",
+          borderWidth: 2,
+          backgroundColor: "#fff",
+          backgroundImg: "",
+        },
+      },
+      // 创建文字
+      {
+        class: "text",
+        isEditable: false, //是否处于编辑状态
+        content: "双击可编辑文字",
+        style: {
+          width: 200,
+          top: 200,
+          left: 200,
+          rotate: 0,
+          fontSize: 16,
+          borderRadius: 0,
+          borderStyle: "solid",
+          borderColor: "#000",
+          borderWidth: 2,
+          backgroundColor: "#fff",
+          backgroundImg: "",
+        },
+      },
+      //创建图片
+      {},
+      //创建按钮
+      {
+        class: "button",
+        content: "按钮",
+        href: 'javascript:;',
+        style: {
+          width: 100,
+          height: 50,
+          top: 200,
+          left: 200,
+          rotate: 0,
+          borderRadius: 0,
+          borderStyle: "solid",
+          borderColor: "#000",
+          borderWidth: 2,
+          backgroundColor: "#fff",
+          backgroundImg: "",
+        },
+      },
+      //创建表单
+      {
+        class: "input",
+        tip: "请输入……",
+        type: "text",
+        content: '',//内容
+        style: {
+          width: 300,
+          top: 200,
+          left: 200,
+          height: 50,
+          rotate: 0,
+          borderRadius: 2,
+          borderStyle: "solid",
+          borderColor: "#000",
+          borderWidth: 2,
+          backgroundColor: "#fff",
+          backgroundImg: "",
+        },
+      },
+    ];
+
+    // 创建图片
+    /*const newPic = () => {
+      let image = "";
+      let reader = new FileReader();
+      reader.readAsDataURL(inputObj.files[0]);
+      reader.onload = () => {
+        console.log(reader.result);
       };
-      
-     // 创建盒子
-     const newBox = () => {
-       const div = document.createElement("div");
-       div.style.width = "200px";
-       div.style.height = "200px";
-       div.style.position = "relative";
-       div.style.display = "block";
-       div.style.top = "50%";
-       div.style.left = "50%";
-       div.style.transform = "translate(-50%,-50%)";
-       div.style.border = "1px solid #000";
-       return div;
-     };
-     // 创建文字
-    const newWord = () => {
-      const p = document.createElement('p');
-      p.style.margin = "0px";
-      p.style.height = "50px";
-      p.style.lineHeight = "50px";
-      p.style.width = "200px";
-      p.style.paddingLeft = "10px";
-      p.style.display = "block";
-      p.style.position = "relative";
-      p.style.top = "50%";
-      p.style.left = "50%";
-      p.style.transform="translate(-50%,-50%)";
-      p.style.border = "1px solid #000";
-      p.innerHTML = "请输入文字";
-      p.style.fontSize = "28px";
-      return p;
-     }
-     // 创建图片
-     const newPic=()=>{}
-     // 创建按钮
-     const newBtn=()=>{}
-     // 创建表单
-     const newExe=()=>{}
+    };
+    const selectImage = (file) => {
+      if (!file.files || !file.files[0]) {
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        image = evt.target.result;
+        console.log(1);
+      };
+      reader.readAsDataURL(file.files[0]);
+    };*/
     return {
       newSomething,
-      props,
+      list,
     };
   },
 };
-=======
-import { reactive } from 'vue'
-import elStore from '../store/elStore'
-import { v4 as uuidv4 } from "uuid";
-export default {
-  name: 'ComponentList',
-  setup() {
-    const useElStore = elStore();
-    const list = [
-      { id: 1, title: '盒子', icon: require('../assets/' + 'hezi.png') },
-      { id: 2, title: '文字', icon: require('../assets/' + 'wenzi.png') },
-      { id: 3, title: '图片', icon: require('../assets/' + 'tupian.png') },
-      { id: 4, title: '按钮', icon: require('../assets/' + 'chukong.png') },
-      { id: 5, title: '表单', icon: require('../assets/' + 'biaodan.png') },
-    ];
-    //要保存的全部Dom 只是用来测试
-    let els = reactive([
-      //文本框
-      [
-        {
-          id: uuidv4(),
-          class: "text",
-          width: 100,
-          left: 0,
-          top: 0,
-          height: undefined,
-          rotate: 0,
-          fontSize: 16,
-
-          isEditable: false, //是否处于编辑状态
-          content: "双击可编辑文字",
-        },
-      ],
-      //矩形框
-      [
-        {
-          id: uuidv4(),
-          class: "el",
-          width: 100,
-          height: 100,
-          left: 100,
-          top: 100,
-          rotate: 0,
-        },
-        {
-          id: uuidv4(),
-          class: "el",
-          width: 100,
-          height: 100,
-          left: 200,
-          top: 300,
-          rotate: 0,
-        },
-      ],
-    ]);
-
-    useElStore.els = els;
-    return {list}
-  }
-}
->>>>>>> 60f1bbb (编辑页面)
 </script>
 
 <style lang="less" scoped>
@@ -191,11 +157,13 @@ h3 {
   font-weight: 700;
   font-size: 22px;
 }
+
 .item-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   padding: 0 25px;
+
   .item {
     width: 105px;
     height: 105px;
@@ -207,23 +175,26 @@ h3 {
     border: 2px solid rgb(189, 188, 188);
     border-radius: 8px;
     cursor: pointer;
+
     &:nth-child(2n + 1) {
       margin-right: 26px;
     }
+
     img {
       width: 28px;
       height: 28px;
     }
+
     p {
       font-size: 16px;
       font-weight: 700;
       margin-top: 5px;
       line-height: 16px;
     }
+
+    .imgInput {
+      display: none;
+    }
   }
 }
-<<<<<<< HEAD
 </style>
-=======
-</style>
->>>>>>> 60f1bbb (编辑页面)

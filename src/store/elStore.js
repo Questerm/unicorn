@@ -3,7 +3,7 @@ export default defineStore('mystore', {
     state: () => {
         return {
             els: [],
-            elsIdx: []//当前
+            elsIdx: new Array(2)//当前
         }
     },
     getters: {},

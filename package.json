@@ -11,13 +11,9 @@
   "dependencies": {
     "ant-design-vue": "^3.2.10",
     "core-js": "^3.8.3",
-<<<<<<< HEAD
-    "ts-loader": "^9.3.1",
-=======
     "pinia": "^2.0.17",
     "ts-loader": "^9.3.1",
     "uuid": "^8.3.2",
->>>>>>> 60f1bbb (编辑页面)
     "vue": "^3.2.13",
     "vue-router": "^4.0.13"
   },

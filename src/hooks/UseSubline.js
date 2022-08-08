@@ -15,7 +15,8 @@ export default (els, elsIdx, sublines, f, rect) => {
     //父元素中除辅助线和矩形选择框外的所有元素的集合
     let elDomAll = [];
     for (let i = 0; i < els.length; i++)
-        elDomAll.push(...document.querySelectorAll('.' + els[i][0].class));
+        if(els[i][0])
+            elDomAll.push(...f.querySelectorAll('.' + els[i][0].class));
     //如果元素不够两个不需要比较 直接退出该函数
     if (elDomAll.length < 2) return;
     const fSize = f.getBoundingClientRect();
@@ -56,7 +57,7 @@ export default (els, elsIdx, sublines, f, rect) => {
                     let t = tmp[j] - elprop[k];
                     //相同 保存反方向可能的值 比如现在是x方向的j 保存y方向的数据 方便找到最大和最小
                     if (Math.abs(t) < 5 && j < 3 && flag1) {
-                        el.top += t;
+                        el.style.top += t;
                         elprop[0] += t;
                         elprop[1] += t;
                         elprop[2] += t;
@@ -66,7 +67,7 @@ export default (els, elsIdx, sublines, f, rect) => {
                         break;
                     }
                     else if (Math.abs(t) < 5 && j > 2 && flag2) {
-                        el.left += t;
+                        el.style.left += t;
                         elprop[3] += t;
                         elprop[4] += t;
                         elprop[5] += t;

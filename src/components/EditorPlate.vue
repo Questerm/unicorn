@@ -1,37 +1,56 @@
 <template>
   <div class="editorPlate" ref="editorPlate" @mousedown="changeRectShow">
-    <div
-      v-for="(p, index) of els[1]"
-      :key="p.id"
-      :class="p.class"
-      :style="{
-        left: p.left + 'px',
-        top: p.top + 'px',
-        width: p.width + 'px',
-        height: p.height + 'px',
-        transform: `rotate(${p.rotate}deg)`,
-        borderRadius: p.radius + 'px',
-      }"
-      @mousedown.stop="move($event, p, [1, index])"
-    ></div>
+    <!-- 矩形 -->
     <div
       v-for="(p, index) of els[0]"
       :key="p.id"
       :class="p.class"
       :style="{
-        left: p.left + 'px',
-        top: p.top + 'px',
-        width: p.width + 'px',
-        fontSize: p.fontSize + 'px',
-        transform: `rotate(${p.rotate}deg)`,
-        borderRadius: p.radius + 'px',
+        ...styleFormat({ ...p.style }),
+      }"
+      @mousedown.stop="move($event, p, [0, index])"
+    ></div>
+    <!-- 文本 -->
+    <div
+      v-for="(p, index) of els[1]"
+      :key="p.id"
+      :class="p.class"
+      :style="{
+        ...styleFormat({ ...p.style }),
       }"
       :contenteditable="p.isEditable"
-      @mousedown.stop="move($event, p, [0, index])"
+      @mousedown.stop="move($event, p, [1, index])"
       @input="changeText($event, p)"
     >
       {{ p.content }}
     </div>
+    <!-- 图片 -->
+    <img src="" alt="">
+    <!-- 按钮 -->
+    <button
+      v-for="(p, index) of els[3]"
+      :key="p.id"
+      :class="p.class"
+      :style="{
+        ...styleFormat({ ...p.style }, 'btn'),
+      }"
+      @mousedown.stop="move($event, p, [3, index])"
+    >
+      <a :href="p.href">{{ p.content }}</a>
+    </button>
+    <!-- 表单 -->
+      <input
+      v-for="(p, index) of els[4]"
+      :key="p.id"
+      :class="p.class"
+      :style="{
+        ...styleFormat({ ...p.style }),
+      }"
+      @mousedown.stop="move($event, p, [4, index])"
+        :type="p.type"
+        v-model="p.content"
+        :placeholder="p.tip"
+      />
     <!-- 矩形选择框 -->
     <div
       class="rect"
@@ -76,10 +95,11 @@ export default {
     const useElStore = elStore();
     const editorPlate = ref(null);
     const rect = ref(null);
+
     //选择矩形框现在的位置
-    let elsIdx = [];
+    let elsIdx = useElStore.elsIdx;
     //获取store里面的el
-    let els=useElStore.els;
+    let els = useElStore.els;
     //矩形选择框是否出现
     let rectIsShow = ref(false);
 
@@ -101,7 +121,7 @@ export default {
     // 定时器 为了判断是双击还是单击
     let timer = null;
     let num = 0;
-    
+
     //移动代码
     function move(e, p, idx) {
       num++;
@@ -111,14 +131,15 @@ export default {
       }, 300);
 
       if (
-        elsIdx.toString() != "" &&
-        p.toString() != els[elsIdx[0]][elsIdx[1]].toString()
+        elsIdx[0] != undefined &&
+        { ...p }.toString() != { ...els[elsIdx[0]][elsIdx[1]] }.toString()
       ) {
         if (els[elsIdx[0]][0].class == "text")
           els[elsIdx[0]][elsIdx[1]].isEditable = false;
         num = 0;
       }
-      elsIdx = idx;
+      elsIdx[0] = idx[0];
+      elsIdx[1] = idx[1];
       useElStore.elsIdx = elsIdx;
 
       if (p.class == "text" && num >= 2) {
@@ -153,11 +174,23 @@ export default {
     //改变矩形选择框展示状态
     function changeRectShow() {
       num = 0;
-      if (elsIdx.toString()!='' && els[elsIdx[0]][0].class == "text")
+      if (elsIdx[0] != undefined && els[elsIdx[0]][0].class == "text")
         els[elsIdx[0]][elsIdx[1]].isEditable = false;
       rectIsShow.value = false;
     }
-    
+
+    //样式格式化
+    function styleFormat(obj, type) {
+      for (let key in obj) {
+        if (typeof obj[key] == "number" && key != "rotate")
+          obj[key] = obj[key].toString() + "px";
+      }
+      obj.transform = `rotate(${obj.rotate}deg)`;
+      delete obj.rotate;
+      if (type == "btn") obj.lineHeight = obj.height;
+      return obj;
+    }
+
     return {
       editorPlate,
       rect,
@@ -169,6 +202,7 @@ export default {
       changeRotate,
       sublines,
       changeRectShow,
+      styleFormat,
     };
   },
 };
@@ -184,6 +218,20 @@ export default {
     position: absolute;
     width: 100px;
     word-wrap: break-word;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  a {
+    pointer-events: none;
+    color: #333;
+  }
+  input,button {
+    position: absolute;
+    box-sizing: border-box;
+  }
+  .button {
+    text-align: center;
   }
   .el {
     top: 40px;

@@ -5,11 +5,11 @@
  * e点击的元素
  */
 export default (e,p, rect) => {
-    rect.style.width = p.width + 'px';
+    rect.style.width = p.style.width + 'px';
     rect.style.height = e.target.offsetHeight + 'px';
-    rect.style.left = p.left + 'px';
-    rect.style.top = p.top + 'px';
-    rect.style.transform = 'rotate(' + p.rotate + 'deg)';
+    rect.style.left = p.style.left + 'px';
+    rect.style.top = p.style.top + 'px';
+    rect.style.transform = 'rotate(' + p.style.rotate + 'deg)';
 
     if (e.target.className == 'text') {//如果是文本框不应该有改变大小的上下按钮
         rect.querySelector('.t').style.display='none';

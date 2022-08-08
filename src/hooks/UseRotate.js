@@ -12,8 +12,8 @@ export default (el, rect, p) => {
         let x = e.pageX - centerX;
         let y = e.pageY - centerY;
         //用反正切把角度求出来
-        el.rotate = Math.round(Math.atan2(y, x) / Math.PI * 180-90)
-        rect.style.transform = 'rotate(' + el.rotate + 'deg)';
+        el.style.rotate = Math.round(Math.atan2(y, x) / Math.PI * 180-90)
+        rect.style.transform = 'rotate(' + el.style.rotate + 'deg)';
     }
     document.onmouseup = () => {
         document.onmousemove = null;

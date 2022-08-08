@@ -15,12 +15,8 @@ module.exports = {
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
        //在rules中添加自定义规则
        //关闭组件命名规则
-<<<<<<< HEAD
-       "vue/multi-word-component-names":"off",
-=======
       "vue/multi-word-component-names": "off",
       "vue/no-multiple-template-root":'off' 
->>>>>>> 60f1bbb (编辑页面)
     },
     overrides: [
       {

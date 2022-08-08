@@ -32,8 +32,8 @@ export default (e, p, f, rect, show, els, elsIdx, sublines) => {
         //下边锁死
         if (t + sSize.height > f.offsetHeight)
             t = f.offsetHeight - sSize.height;
-        p.left = Math.round(l);
-        p.top = Math.round(t);
+        p.style.left = Math.round(l);
+        p.style.top = Math.round(t);
         rect.style.left = Math.round(l) + 'px';
         rect.style.top = Math.round(t) + 'px';
         sublines.splice(0, sublines.length);

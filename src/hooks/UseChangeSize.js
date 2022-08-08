@@ -7,14 +7,15 @@
  */
 export default (e, el, f, rect, idx) => {
     const elName = e.target.className;
-    const elW = el.width;
-    let elH = el.height;
-    const elT = el.top;
-    const elL = el.left;
+    const elStyle = el.style;
+    const elW = elStyle.width;
+    let elH = elStyle.height;
+    const elT = elStyle.top;
+    const elL = elStyle.left;
     const elDom = f.querySelectorAll('.' + el.class)[idx];
     const fSize = f.getBoundingClientRect();
     //当高度或者宽度小于minSize不能再小了
-    const minSize = el.fontSize ? el.fontSize + 20 : 15;
+    const minSize = elStyle.fontSize ? elStyle.fontSize + 20 : 15;
     //鼠标相对于被点击元素的位置
     let disX = e.pageX - elL - fSize.x;
     let disY = e.pageY - elT - fSize.y;
@@ -50,14 +51,14 @@ export default (e, el, f, rect, idx) => {
             h = height ? f.offsetHeight - elT : elH;
         }
         if (w > minSize) {
-            el.left = x;
-            el.width = w;
+            elStyle.left = x;
+            elStyle.width = w;
             rect.style.left = x + "px";
             rect.style.width = w + 'px';
         }
         if (h > minSize) {
-            el.top = y;
-            el.height = (height && width ? w * (elH / elW) : h);
+            elStyle.top = y;
+            elStyle.height = (height && width ? w * (elH / elW) : h);
             rect.style.top = y + "px";
             rect.style.height = (height && width ? w * (elH / elW) : h) + 'px';
         }
