@@ -20,10 +20,15 @@
 import { v4 as uuidv4 } from "uuid";
 import elStore from "@/store/elStore";
 import { reactive } from '@vue/reactivity';
+import { onMounted } from "vue";
 
 export default {
   name: "ComponentList",
   setup() {
+    let imgInput;
+    onMounted(() => {
+      imgInput = document.getElementsByClassName("imgInput")[0];
+    })
     let useElStore = elStore();
     //组件列表
     const list = [
@@ -38,6 +43,14 @@ export default {
     useElStore.els = els;
     const newSomething = (id) => {
       let t = createEl[id];
+      if (id === 2 && imgInput) {
+        console.log(2);
+        imgInput.addEventListener("click", (e) => {
+          e.stopPropagation();
+        })
+        imgInput.click();
+        createEl[id].url=getImgUrl();
+      }
       t.id = uuidv4();
       els[id].push(t);
     };
@@ -80,7 +93,23 @@ export default {
         },
       },
       //创建图片
-      {},
+      {
+        class: "img",
+        url: "",
+        style: {
+          width: 200,
+          height: 200,
+          top: 200,
+          left: 200,
+          rotate: 0,
+          borderRadius: 0,
+          borderStyle: "solid",
+          borderColor:"#000",
+          borderWidth: 2,
+          backgroundColor: "#fff",
+          backgroundImg: "",
+        }
+      },
       //创建按钮
       {
         class: "button",
@@ -123,28 +152,21 @@ export default {
     ];
 
     // 创建图片
-    /*const newPic = () => {
-      let image = "";
-      let reader = new FileReader();
-      reader.readAsDataURL(inputObj.files[0]);
-      reader.onload = () => {
-        console.log(reader.result);
-      };
-    };
-    const selectImage = (file) => {
-      if (!file.files || !file.files[0]) {
-        return;
+    const getImgUrl = () => {
+      let image = '';
+      imgInput.onchange = () => {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          image = e.target.result;
+          return image;
+        };
+        reader.readAsDataURL(imgInput.files[0]);
       }
-      var reader = new FileReader();
-      reader.onload = function (evt) {
-        image = evt.target.result;
-        console.log(1);
-      };
-      reader.readAsDataURL(file.files[0]);
-    };*/
+    }
     return {
       newSomething,
       list,
+      getImgUrl
     };
   },
 };

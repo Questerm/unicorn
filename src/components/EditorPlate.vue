@@ -25,7 +25,16 @@
       {{ p.content }}
     </div>
     <!-- 图片 -->
-    <img src="" alt="">
+    <!-- <img src="" alt=""> -->
+    <img 
+      v-for="(p,index) of els[2]"
+      :key="p.id"
+      :class="p.class"
+      :src="p.url"
+      :style="{
+        ...styleFormat({...p.style})
+      }"
+      @mousedown.stop="move($event,p,[2,index])">
     <!-- 按钮 -->
     <button
       v-for="(p, index) of els[3]"
