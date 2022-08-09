@@ -11,14 +11,14 @@ export default (e, p, rect) => {
     rect.style.top = p.style.top + 'px';
     rect.style.transform = 'rotate(' + p.style.rotate + 'deg)';
 
-    if (e.target.className == 'text') { //如果是文本框不应该有改变大小的上下按钮
+    if (p.class == 'text') { //如果是文本框不应该有改变大小的上下按钮
         rect.querySelector('.t').style.display = 'none';
         rect.querySelector('.b').style.display = 'none';
         rect.querySelector('.lt').style.display = 'none';
         rect.querySelector('.lb').style.display = 'none';
         rect.querySelector('.rt').style.display = 'none';
         rect.querySelector('.rb').style.display = 'none';
-    } else if (e.target.className == "img") { //如果是文本框不应该有改变大小的上下按钮
+    } else if (p.class == "img") { //如果是文本框不应该有改变大小的上下按钮
         rect.querySelector('.t').style.display = 'none';
         rect.querySelector('.b').style.display = 'none';
         rect.querySelector('.l').style.display = 'none';
