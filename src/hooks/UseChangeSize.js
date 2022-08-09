@@ -62,7 +62,7 @@ export default (e, el, f, rect, idx) => {
             rect.style.top = y + "px";
             rect.style.height = (height && width ? w * (elH / elW) : h) + 'px';
         }
-        if (el.class == 'text') {
+        if (el.class == 'text' || el.class == "img") {
             rect.style.height = elDom.offsetHeight + 'px';
         }
     }

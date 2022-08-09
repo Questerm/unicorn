@@ -133,6 +133,9 @@ export default {
 
     //移动代码
     function move(e, p, idx) {
+      if (p.class == "img") {
+        e.preventDefault();
+      }
       num++;
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
@@ -238,6 +241,9 @@ export default {
   input,button {
     position: absolute;
     box-sizing: border-box;
+  }
+  img{
+    position: absolute;
   }
   .button {
     text-align: center;
