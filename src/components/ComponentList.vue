@@ -42,8 +42,9 @@ export default {
     let els = reactive( Array.from(new Array(list.length), () => []));
     useElStore.els = els;
     const newSomething = (id) => {
-      let t = createEl[id];
-       t.id = uuidv4();
+      // let t = createEl[id];
+      let t = JSON.parse(JSON.stringify(createEl[id]));
+      t.id = uuidv4();
       if (id === 2 && imgInput) {
         imgInput.addEventListener("click", (e) => {
           e.stopPropagation();
