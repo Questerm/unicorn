@@ -43,18 +43,41 @@ export default {
     useElStore.els = els;
     const newSomething = (id) => {
       let t = createEl[id];
+       t.id = uuidv4();
       if (id === 2 && imgInput) {
-        console.log(2);
         imgInput.addEventListener("click", (e) => {
           e.stopPropagation();
         })
         imgInput.click();
-        createEl[id].url=getImgUrl();
+        let p = new Promise(function (resolve, reject) {
+           imgInput.onchange = () => {
+           let reader = new FileReader();
+           reader.onload = (e) => {
+             t.url = e.target.result;
+             resolve(t);
+           }
+           reader.readAsDataURL(imgInput.files[0]);
+          }
+        });
+        p.then(function (t) {
+          els[id].push(t)
+        });
+      } else {
+        els[id].push(t);
       }
-      t.id = uuidv4();
-      els[id].push(t);
     };
-
+// 创建图片
+    // const getImgUrl = () => {
+    //   imgInput.onchange = () => {
+    //     // let reader = new FileReader();
+    //     // reader.onload = (e) => {
+    //       image = e.target.result;
+    //       createEl[2].url = image;
+    //       console.log(1);
+    //     // };
+    //     // reader.readAsDataURL(imgInput.files[0]);
+    //   }
+    // }
     const createEl = [
       //创建盒子
       {
@@ -98,7 +121,6 @@ export default {
         url: "",
         style: {
           width: 200,
-          height: 200,
           top: 200,
           left: 200,
           rotate: 0,
@@ -150,23 +172,10 @@ export default {
         },
       },
     ];
-
-    // 创建图片
-    const getImgUrl = () => {
-      let image = '';
-      imgInput.onchange = () => {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          image = e.target.result;
-          return image;
-        };
-        reader.readAsDataURL(imgInput.files[0]);
-      }
-    }
+    
     return {
       newSomething,
       list,
-      getImgUrl
     };
   },
 };
