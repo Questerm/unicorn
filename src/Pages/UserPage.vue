@@ -1,5 +1,6 @@
 <template>
 	<div class="userPage">
+		<HeadNav />
 		<div class="user">
 			<div class="userInfo">
 				<div class="avator">
@@ -132,6 +133,7 @@
 
 <script>
 import { ref } from 'vue'
+import HeadNav from '@/components/HeadNav.vue'
 import {
 	PlusCircleOutlined,
 	ImportOutlined,
@@ -146,6 +148,7 @@ import { useRouter } from 'vue-router'
 
 export default {
 	components: {
+		HeadNav,
 		PlusCircleOutlined,
 		ImportOutlined,
 		FileAddOutlined,

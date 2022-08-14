@@ -26,6 +26,14 @@ const router = createRouter({
         name: 'guide',
         component: () =>
             import ('@/Pages/Guide.vue')
+    }, {
+
+        path: '/preview/:projectId',
+        name: 'preview',
+        component: () =>
+            import ('@/components/ProjectPreview.vue'),
+        props: true
+
     }]
 })
 

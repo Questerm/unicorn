@@ -1,5 +1,6 @@
 <template>
 	<div class="guide">
+		<HeadNav />
 		<div class="title">
 			<div class="projectName">
 				<div class="proTitle">
@@ -16,7 +17,10 @@
 
 <script>
 import { useRouter } from 'vue-router'
+import HeadNav from '@/components/HeadNav.vue'
+
 export default {
+	components: { HeadNav },
 	setup() {
 		const router = useRouter()
 		const toLogin = () => {
@@ -33,10 +37,9 @@ export default {
 	width: 100%;
 	height: 100%;
 	background: url('../assets/login-bg.svg');
-	padding-top: 60px;
 	.title {
 		width: 1200px;
-		margin: 0 auto;
+		margin: 50px auto;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
