@@ -9,7 +9,7 @@
   </a-menu>
   <div class="content">
     <div class="attribute" v-show="isAttributeShow">
-      <component :is="'attribute'"></component>
+      <Attribute></Attribute>
     </div>
     <div class="animation" v-show="!isAttributeShow">
       <Animation></Animation>
@@ -20,10 +20,11 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import Animation from './Animation.vue'
+import Attribute from './childComponents/Box/Attribute.vue';
 
 export default defineComponent({
   name: 'Setting',
-  components: { Animation },
+  components: { Animation,  Attribute },
   setup() {
     const current = ref(['mail']);
     const isAttributeShow = ref(true);

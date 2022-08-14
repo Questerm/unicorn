@@ -5,7 +5,7 @@
  */
 import UseRectShow from "./UseRectShow";
 import UseSubline from "./UseSubline";
-export default (e, p, f, rect, show, els, elsIdx, sublines) => {
+export default (e, p, f,rect, rectIsShow, els, elsIdx, sublines) => {
     if (els[elsIdx[0], elsIdx[1]].isEditable) return;
     const s = e.target;//要动的盒子
     const sSize = s.getBoundingClientRect();//子盒子的位置以及大小对象
@@ -14,8 +14,8 @@ export default (e, p, f, rect, show, els, elsIdx, sublines) => {
     const y = e.pageY-s.offsetTop;
     //改变鼠标样式
     s.style.cursor = 'move';
-    //点击时被矩形框选中
-    show.value = UseRectShow(e, p, rect);
+    //点击时被矩形框选
+    rectIsShow.value = UseRectShow(p,rect);
     document.onmousemove = e => {
         //移动盒子相对于父盒子的新位置
         let l = e.pageX - x;
@@ -34,10 +34,8 @@ export default (e, p, f, rect, show, els, elsIdx, sublines) => {
             t = f.offsetHeight - sSize.height;
         p.style.left = Math.round(l);
         p.style.top = Math.round(t);
-        rect.style.left = Math.round(l) + 'px';
-        rect.style.top = Math.round(t) + 'px';
         sublines.splice(0, sublines.length);
-        UseSubline(els, elsIdx,sublines,f,rect);
+        UseSubline(els, elsIdx,sublines,f);
     }
     document.onmouseup = () => {
         sublines.splice(0, sublines.length);

@@ -11,7 +11,7 @@
  * 3、最后在数组里面找最大和最小值，就是起点和终点
  */
 
-export default (els, elsIdx, sublines, f, rect) => {
+export default (els, elsIdx, sublines, f) => {
     //父元素中除辅助线和矩形选择框外的所有元素的集合
     let elDomAll = [];
     for (let i = 0; i < els.length; i++)
@@ -61,7 +61,6 @@ export default (els, elsIdx, sublines, f, rect) => {
                         elprop[0] += t;
                         elprop[1] += t;
                         elprop[2] += t;
-                        rect.style.top = rect.offsetTop + t + 'px';
                         samePoint[k].push(tmp[3], tmp[4], tmp[5]);
                         flag1 = false;
                         break;
@@ -71,7 +70,6 @@ export default (els, elsIdx, sublines, f, rect) => {
                         elprop[3] += t;
                         elprop[4] += t;
                         elprop[5] += t;
-                        rect.style.left = rect.offsetLeft + t + 'px';
                         samePoint[k].push(tmp[0], tmp[1], tmp[2]);
                         flag2 = false;
                         break;

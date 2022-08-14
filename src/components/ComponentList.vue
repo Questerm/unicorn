@@ -42,7 +42,6 @@ export default {
     let els = reactive( Array.from(new Array(list.length), () => []));
     useElStore.els = els;
     const newSomething = (id) => {
-      // let t = createEl[id];
       let t = JSON.parse(JSON.stringify(createEl[id]));
       t.id = uuidv4();
       if (id === 2 && imgInput) {
@@ -50,7 +49,7 @@ export default {
           e.stopPropagation();
         })
         imgInput.click();
-        let p = new Promise(function (resolve, reject) {
+        let p = new Promise(function (resolve) {
            imgInput.onchange = () => {
            let reader = new FileReader();
            reader.onload = (e) => {
@@ -67,18 +66,6 @@ export default {
         els[id].push(t);
       }
     };
-// 创建图片
-    // const getImgUrl = () => {
-    //   imgInput.onchange = () => {
-    //     // let reader = new FileReader();
-    //     // reader.onload = (e) => {
-    //       image = e.target.result;
-    //       createEl[2].url = image;
-    //       console.log(1);
-    //     // };
-    //     // reader.readAsDataURL(imgInput.files[0]);
-    //   }
-    // }
     const createEl = [
       //创建盒子
       {
@@ -91,10 +78,10 @@ export default {
           rotate: 0,
           borderRadius: 0,
           borderStyle: "solid",
-          borderColor: "#000",
+          borderColor: "#000000",
           borderWidth: 2,
-          backgroundColor: "#fff",
-          backgroundImg: "",
+          backgroundColor: "#ffffff",
+          backgroundImage: "",
         },
       },
       // 创建文字
@@ -108,12 +95,19 @@ export default {
           left: 200,
           rotate: 0,
           fontSize: 16,
+          color: "#333333",
+          fontWeight: 400,
+          textDecoration: "none",
           borderRadius: 0,
           borderStyle: "solid",
-          borderColor: "#000",
+          borderColor: "#000000",
           borderWidth: 2,
-          backgroundColor: "#fff",
-          backgroundImg: "",
+          backgroundColor: "#ffffff",
+          backgroundImage: "",
+          paddingLeft: 0,
+          paddingRight: 0,
+          paddingTop: 0,
+          paddingBottom: 0
         },
       },
       //创建图片
@@ -127,8 +121,8 @@ export default {
           rotate: 0,
           borderRadius: 0,
           borderStyle: "solid",
-          borderColor:"#000",
-          borderWidth: 2,
+          borderColor: "#000",
+          borderWidth: 0,
           backgroundColor: "#fff",
           backgroundImg: "",
         }
@@ -136,27 +130,35 @@ export default {
       //创建按钮
       {
         class: "button",
-        content: "按钮",
-        href: 'javascript:;',
         style: {
           width: 100,
           height: 50,
           top: 200,
           left: 200,
           rotate: 0,
+          fontSize: 16,
+          color: "#333333",
+          fontWeight: 400,
+          textDecoration: "none",
           borderRadius: 0,
           borderStyle: "solid",
-          borderColor: "#000",
+          borderColor: "#000000",
           borderWidth: 2,
-          backgroundColor: "#fff",
-          backgroundImg: "",
+          backgroundColor: "#ffffff",
+          backgroundImage: "",
+          paddingLeft: 0,
+          paddingRight: 0,
+          paddingTop: 0,
+          paddingBottom: 0
         },
+        other: {
+          href: '',
+          content: "按钮"
+        }
       },
       //创建表单
       {
         class: "input",
-        tip: "请输入……",
-        type: "text",
         content: '',//内容
         style: {
           width: 300,
@@ -164,16 +166,26 @@ export default {
           left: 200,
           height: 50,
           rotate: 0,
+          fontSize: 16,
+          color: "#333333",
+          fontWeight: 400,
           borderRadius: 2,
           borderStyle: "solid",
-          borderColor: "#000",
+          borderColor: "#000000",
           borderWidth: 2,
-          backgroundColor: "#fff",
-          backgroundImg: "",
+          backgroundColor: "#ffffff",
+          backgroundImage: "",
+          paddingLeft: 0,
+          paddingRight: 0,
+          paddingTop: 0,
+          paddingBottom: 0
         },
+        other: {
+          tip: "请输入……",
+          type: "text"
+        }
       },
     ];
-    
     return {
       newSomething,
       list,

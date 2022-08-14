@@ -6,8 +6,10 @@ export default defineStore('mystore', {
     },
     state: () => {
         return {
+            elDom: '',
             els: [],
-            elsIdx: new Array(2) //当前
+            elsIdx: new Array(2),//当前
+            rectStyle: { style: {} }
         }
     },
     getters: {},

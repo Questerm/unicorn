@@ -11,7 +11,9 @@
       <!-- 中间画布部分 -->
       <div class="middle">
         <Operation></Operation>
-        <EditorPlate></EditorPlate>
+        <div class="writeBox">
+          <EditorPlate></EditorPlate>
+        </div>
       </div>
       <!-- 右边组件部分 -->
       <div class="right">
@@ -65,6 +67,11 @@ export default {
     height: 673px;
     border-radius: 6px;
     background-color: #fff;
+    .writeBox {
+      width: 100%;
+      height: calc(100% - 61px);
+      overflow-y: scroll;
+    }
   }
   .right {
     position: fixed;
