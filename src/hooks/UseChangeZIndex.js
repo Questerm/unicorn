@@ -4,14 +4,14 @@
 export default (els, elsIdx, idx) => {
     const el = els[elsIdx[0]][elsIdx[1]];
     const elL = el.style.left;
-    const elR = el.style.left + el.style.width / 2;
+    const elR = el.style.left + el.style.width;
     let arr = [];
     //找到与当前选中的元素部分重叠的元素 保存在数组中
     for (let i = 0; i < els.length; i++) {
-        for (let j = 0; j < els[i].length; i++) {
+        for (let j = 0; j < els[i].length; j++) {
             if (!(elsIdx[0] == i && elsIdx[1] == j)) {
                 let tL = els[i][j].style.left;
-                let tR = els[i][j].style.left + els[i][j].style.width / 2;
+                let tR = els[i][j].style.left + els[i][j].style.width;
                 if ((elL < tR && elR > tR) || (tL < elR && tR > elR) || (elL < tL && elR > tR) || (elL > tL && elR < tR)) {
                     arr.push(els[i][j]);
                 }
@@ -43,7 +43,7 @@ export default (els, elsIdx, idx) => {
         switch (idx) {
             case 4:
                 //上移一层
-                if (elIdx < sortArr.length-1) {
+                if (elIdx < sortArr.length - 1) {
                     el.style.zIndex = elIdx + 2;
                     sortArr[elIdx + 1].style.zIndex = elIdx + 1;
                 }

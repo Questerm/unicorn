@@ -8,7 +8,7 @@ export default defineStore('mystore', {
         return {
             elDom: '',
             els: [],
-            elsIdx: new Array(2),//当前
+            elsIdx: new Array(2).fill(-1),//当前
             rectStyle: { style: {} }
         }
     },
