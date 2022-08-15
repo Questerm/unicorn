@@ -247,7 +247,7 @@ export default defineComponent({
 
     //监听elsIdx改变 改变更换el值
     watch(elsIdx, () => {
-      if (elsIdx[0] || elsIdx[0] == 0) {
+      if (elsIdx[0]!=-1 || elsIdx[0] == 0) {
         let t = els[elsIdx[0]][elsIdx[1]];
         el.style = t.style;
         elClass.value = t.class;
