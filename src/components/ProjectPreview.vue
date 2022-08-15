@@ -73,13 +73,18 @@ export default {
 		const useElStore = elStore()
 		let els = useElStore.els
 
-		//元素位置
+		//样式格式化
 		function styleFormat(obj, type) {
-			console.log(obj['left'] / (860 - (obj['left'] + obj['width'])))
 			for (let key in obj) {
-				if (typeof obj[key] == 'number' && key != 'rotate')
+				if (
+					typeof obj[key] == 'number' &&
+					key != 'rotate' &&
+					key != 'fontWeight' &&
+					key != 'zIndex'
+				)
 					obj[key] = obj[key].toString() + 'px'
 			}
+			obj.backgroundImage = `url(${obj.backgroundImage})`
 			obj.transform = `rotate(${obj.rotate}deg)`
 			delete obj.rotate
 			if (type == 'btn') obj.lineHeight = obj.height
