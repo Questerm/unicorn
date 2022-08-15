@@ -1,540 +1,551 @@
 <template>
-  <div
-    class="editorPlate"
-    ref="editorPlate"
-    @mousedown="changeRectShow"
-    @contextmenu.prevent="openMeun"
-  >
-    <!-- 矩形 -->
-    <div
-      v-for="(p, index) of els[0]"
-      :key="p.id"
-      :class="p.class"
-      :style="{
-        ...styleFormat({ ...p.style }),
-      }"
-      @mousedown.stop="move($event, p, [0, index])"
-    ></div>
-    <!-- 文本 -->
-    <div
-      v-for="(p, index) of els[1]"
-      :key="p.id"
-      :class="p.class"
-      :style="{
-        ...styleFormat({ ...p.style }),
-      }"
-      :contenteditable="p.isEditable"
-      @mousedown.stop="move($event, p, [1, index])"
-      @input="changeText($event, p)"
-    >
-      {{ p.content }}
-    </div>
-    <!-- 图片 -->
-    <img
-      v-for="(p, index) of els[2]"
-      :key="p.id"
-      :class="p.class"
-      :src="p.url"
-      :style="{ ...styleFormat({ ...p.style }) }"
-      @mousedown.stop="move($event, p, [2, index])"
-    />
-    <!-- 按钮 -->
-    <button
-      v-for="(p, index) of els[3]"
-      :key="p.id"
-      :class="p.class"
-      :style="{
-        ...styleFormat({ ...p.style }, 'btn'),
-      }"
-      @mousedown.stop="move($event, p, [3, index])"
-    >
-      <a :style="{ color: p.style.color }" :href="p.other.href">{{
-        p.other.content
-      }}</a>
-    </button>
-    <!-- 表单 -->
-    <input
-      v-for="(p, index) of els[4]"
-      :key="p.id"
-      :class="p.class"
-      :style="{
-        ...styleFormat({ ...p.style }),
-      }"
-      @mousedown.stop="move($event, p, [4, index])"
-      :type="p.other.type"
-      v-model="p.content"
-      :placeholder="p.other.tip"
-    />
-    <!-- 矩形选择框 -->
-    <div
-      class="rect"
-      ref="rect"
-      @mousedown.stop="changeSize"
-      v-show="rectIsShow"
-      :style="{
-        width: rectStyle.style.width + 'px',
-        height: rectStyle.height + 'px',
-        top: rectStyle.style.top + 'px',
-        left: rectStyle.style.left + 'px',
-        transform: `rotate(${rectStyle.style.rotate}deg)`,
-      }"
-    >
-      <span class="l"></span>
-      <span class="b"></span>
-      <span class="t"></span>
-      <span class="r"></span>
-      <span class="lt"></span>
-      <span class="lb"></span>
-      <span class="rb"></span>
-      <span class="rt"></span>
-      <span class="rotate" @mousedown.stop="changeRotate"></span>
-    </div>
-    <!-- 辅助线 -->
-    <div
-      class="subline"
-      v-for="p of sublines"
-      :key="p.id"
-      :style="{
-        left: p.left + 'px',
-        top: p.top + 'px',
-        width: p.width + 'px',
-        height: p.height + 'px',
-      }"
-    ></div>
-    <!-- 右键菜单 -->
-    <div class="handleBox" ref="handleBox">
-      <li
-        v-for="(p, index) of handleList"
-        :key="index"
-        @mousedown.stop="handleMeum($event, index)"
-      >
-        <i :class="`iconfont ${p.class}`"></i>
-        <span>{{ p.name }}</span>
-      </li>
-    </div>
-  </div>
+	<div
+		class="editorPlate"
+		ref="editorPlate"
+		:style="editorStyle"
+		@mousedown="changeRectShow"
+		@contextmenu.prevent="openMeun"
+	>
+		<!-- 矩形 -->
+		<div
+			v-for="(p, index) of els[0]"
+			:key="p.id"
+			:class="p.class"
+			:style="{
+				...styleFormat({ ...p.style }),
+			}"
+			@mousedown.stop="move($event, p, [0, index])"
+		></div>
+		<!-- 文本 -->
+		<div
+			v-for="(p, index) of els[1]"
+			:key="p.id"
+			:class="p.class"
+			:style="{
+				...styleFormat({ ...p.style }),
+			}"
+			:contenteditable="p.isEditable"
+			@mousedown.stop="move($event, p, [1, index])"
+			@input="changeText($event, p)"
+		>
+			{{ p.content }}
+		</div>
+		<!-- 图片 -->
+		<img
+			v-for="(p, index) of els[2]"
+			:key="p.id"
+			:class="p.class"
+			:src="p.url"
+			:style="{ ...styleFormat({ ...p.style }) }"
+			@mousedown.stop="move($event, p, [2, index])"
+		/>
+		<!-- 按钮 -->
+		<button
+			v-for="(p, index) of els[3]"
+			:key="p.id"
+			:class="p.class"
+			:style="{
+				...styleFormat({ ...p.style }, 'btn'),
+			}"
+			@mousedown.stop="move($event, p, [3, index])"
+		>
+			<a :style="{ color: p.style.color }" :href="p.other.href">{{
+				p.other.content
+			}}</a>
+		</button>
+		<!-- 表单 -->
+		<input
+			v-for="(p, index) of els[4]"
+			:key="p.id"
+			:class="p.class"
+			:style="{
+				...styleFormat({ ...p.style }),
+			}"
+			@mousedown.stop="move($event, p, [4, index])"
+			:type="p.other.type"
+			v-model="p.content"
+			:placeholder="p.other.tip"
+		/>
+		<!-- 矩形选择框 -->
+		<div
+			class="rect"
+			ref="rect"
+			@mousedown.stop="changeSize"
+			v-show="rectIsShow"
+			:style="{
+				width: rectStyle.style.width + 'px',
+				height: rectStyle.height + 'px',
+				top: rectStyle.style.top + 'px',
+				left: rectStyle.style.left + 'px',
+				transform: `rotate(${rectStyle.style.rotate}deg)`,
+			}"
+		>
+			<span class="l"></span>
+			<span class="b"></span>
+			<span class="t"></span>
+			<span class="r"></span>
+			<span class="lt"></span>
+			<span class="lb"></span>
+			<span class="rb"></span>
+			<span class="rt"></span>
+			<span class="rotate" @mousedown.stop="changeRotate"></span>
+		</div>
+		<!-- 辅助线 -->
+		<div
+			class="subline"
+			v-for="p of sublines"
+			:key="p.id"
+			:style="{
+				left: p.left + 'px',
+				top: p.top + 'px',
+				width: p.width + 'px',
+				height: p.height + 'px',
+			}"
+		></div>
+		<!-- 右键菜单 -->
+		<div class="handleBox" ref="handleBox">
+			<li
+				v-for="(p, index) of handleList"
+				:key="index"
+				@mousedown.stop="handleMeum($event, index)"
+			>
+				<i :class="`iconfont ${p.class}`"></i>
+				<span>{{ p.name }}</span>
+			</li>
+		</div>
+	</div>
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import UseMove from "../hooks/UseMove";
-import UseChangeSize from "../hooks/UseChangeSize";
-import UseRotate from "../hooks/UseRotate";
-import UseChangeZIndex from "@/hooks/UseChangeZIndex";
-import elStore from "@/store/elStore.js";
-import { v4 as uuidv4 } from "uuid";
+import { ref, reactive, onMounted } from 'vue'
+import UseMove from '../hooks/UseMove'
+import UseChangeSize from '../hooks/UseChangeSize'
+import UseRotate from '../hooks/UseRotate'
+import UseChangeZIndex from '@/hooks/UseChangeZIndex'
+import elStore from '@/store/elStore.js'
+import { v4 as uuidv4 } from 'uuid'
 export default {
-  name: "EditorPlate",
-  setup() {
-    const useElStore = elStore();
-    const editorPlate = ref(null);
-    const rect = ref(null);
-    const handleBox = ref(null);
+	name: 'EditorPlate',
+	setup() {
+		const useElStore = elStore()
+		const editorPlate = ref(null)
+		const rect = ref(null)
+		const handleBox = ref(null)
 
-    const handleList = [
-      {
-        name: "复制",
-        class: "icon-fuzhi",
-      },
-      {
-        name: "粘贴",
-        class: "icon-niantie",
-      },
-      {
-        name: "剪切",
-        class: "icon-jianqie",
-      },
-      {
-        name: "删除",
-        class: "icon-shanchutianchong",
-      },
-      {
-        name: "上移一层",
-        class: "icon-shangyiyiceng1",
-      },
-      {
-        name: "下移一层",
-        class: "icon-xiayiyiceng1",
-      },
-      {
-        name: "置于顶层",
-        class: "icon-zhiyudingceng",
-      },
-      {
-        name: "置于底层",
-        class: "icon-zhiyudiceng",
-      },
-    ];
-    
-    //选择矩形框现在的位置
-    let elsIdx = useElStore.elsIdx;
-    //获取store里面的el
-    let els = useElStore.els;
-    //矩形选择框是否出现
-    let rectIsShow = ref(false);
-    let rectStyle = useElStore.rectStyle;
-	//辅助线属性数组
-	let sublines = reactive([]);
-	
-    //改变大小
-    function changeSize(e) {
-      e.preventDefault();
-      UseChangeSize(
-        e,
-        els[elsIdx[0]][elsIdx[1]],
-        editorPlate.value,
-        rectStyle,
-        elsIdx[1]
-      );
-    }
+		const handleList = [
+			{
+				name: '复制',
+				class: 'icon-fuzhi',
+			},
+			{
+				name: '粘贴',
+				class: 'icon-niantie',
+			},
+			{
+				name: '剪切',
+				class: 'icon-jianqie',
+			},
+			{
+				name: '删除',
+				class: 'icon-shanchutianchong',
+			},
+			{
+				name: '上移一层',
+				class: 'icon-shangyiyiceng1',
+			},
+			{
+				name: '下移一层',
+				class: 'icon-xiayiyiceng1',
+			},
+			{
+				name: '置于顶层',
+				class: 'icon-zhiyudingceng',
+			},
+			{
+				name: '置于底层',
+				class: 'icon-zhiyudiceng',
+			},
+		]
 
-	// 定时器 为了判断是双击还是单击
-	let timer = null
-	let num = 0
+		//选择矩形框现在的位置
+		let elsIdx = useElStore.elsIdx
+		//获取store里面的el
+		let els = useElStore.els
+		//矩形选择框是否出现
+		let rectIsShow = ref(false)
+		let rectStyle = useElStore.rectStyle
+		//辅助线属性数组
+		let sublines = reactive([])
 
-	//移动代码
-	function move(e, p, idx) {
-		if (p.class == 'img') {
+		//改变大小
+		function changeSize(e) {
 			e.preventDefault()
-		}
-		num++;
-		if (timer) clearTimeout(timer)
-		timer = setTimeout(() => {
-			num = 0;
-		}, 300)
-		if (
-			elsIdx[0] != undefined &&
-			{ ...p }.toString() != { ...els[elsIdx[0]][elsIdx[1]] }.toString()
-		) {
-			if (els[elsIdx[0]][0].class == 'text')
-				els[elsIdx[0]][elsIdx[1]].isEditable = false
-			num = 0;
-		}
-		//判断两次点击的是否是同一个元素 不同更换elsIdx 换掉rectStyle里面的style和height
-		//如果是原来点击的是text 则需将text改为不是富文本的状态
-		if (elsIdx[0] != idx[0] || elsIdx[1] != idx[1]) {
-			elsIdx[0] = idx[0];
-			elsIdx[1] = idx[1];
-			rectStyle.style = p.style;
-			rectStyle.height = e.target.offsetHeight;
-			if (els[elsIdx[0]][0].class == "text")
-				els[elsIdx[0]][elsIdx[1]].isEditable = false;
-			num = 0;
-		}
-		if (p.class == 'text' && num >= 2) {
-			p.isEditable = true
-			clearTimeout(timer)
-		} else {
-			UseMove(
+			UseChangeSize(
 				e,
-				p,
+				els[elsIdx[0]][elsIdx[1]],
 				editorPlate.value,
-				rect.value,
-				rectIsShow,
-				els,
-				elsIdx,
-				sublines
-			);
+				rectStyle,
+				elsIdx[1]
+			)
 		}
-	}
-	
-    //改变文本时也改变内容 改变矩形选择框高度
-    function changeText(e, p) {
-      e.preventDefault();
-      p.content = e.target.innerText;
-      rectStyle.height = e.target.offsetHeight;
-    }
-    
-    //旋转
-    function changeRotate(e) {
-      e.preventDefault();
-      UseRotate(els, elsIdx, editorPlate.value);
-    }
-    
-    //改变矩形选择框展示状态
-    function changeRectShow() {
-      num = 0;
-      if (elsIdx[0] != undefined && els[elsIdx[0]][0].class == "text")
-        els[elsIdx[0]][elsIdx[1]].isEditable = false;
-      rectIsShow.value = false;
-      elsIdx[0] = null;
-      elsIdx[1] = null;
-      handleBox.value.style.display = "none";
-    }
-    
-    //样式格式化
-    function styleFormat(obj, type) {
-      for (let key in obj) {
-        if (
-          typeof obj[key] == "number" &&
-          key != "rotate" &&
-          key != "fontWeight" &&
-          key != "zIndex"
-        )
-          obj[key] = obj[key].toString() + "px";
-      }
-      obj.backgroundImage = `url(${obj.backgroundImage})`;
-      obj.transform = `rotate(${obj.rotate}deg)`;
-      delete obj.rotate;
-      if (type == "btn") obj.lineHeight = obj.height;
-      return obj;
-    }
-    
-    //右键点击菜单时的元素
-    let xMeum;
-    let yMeum;
-    //打开菜单栏
-    function openMeun(e) {
-      const lis = document.querySelectorAll(".handleBox li");
-    
-      if (e.target.className == "editorPlate") {
-        for (let i = 0; i < lis.length; i++)
-          if (i != 1) lis[i].className = "ban";
-      } else {
-        for (let i = 0; i < lis.length; i++) lis[i].className = "";
-      }
-    
-      const fStyle = editorPlate.value.getBoundingClientRect();
-      xMeum = e.pageX - fStyle.x;
-      yMeum = e.pageY - fStyle.y;
-      handleBox.value.style.left = xMeum + "px";
-      handleBox.value.style.top = yMeum + "px";
-      handleBox.value.style.display = "block";
-    }
-    
-    let copyEl;
-    let copyElIdx = new Array(2);
-    //操作菜单栏
-    function handleMeum(e, index) {
-      let eClass = e.target.className == "";
-      if (index == 0 && eClass) {
-        //复制
-        copyEl = els[elsIdx[0]][elsIdx[1]];
-        copyElIdx[0] = elsIdx[0];
-        copyElIdx[1] = elsIdx[1];
-      } else if (index == 1 && copyEl) {
-        //粘贴
-        let tObj = JSON.parse(JSON.stringify(copyEl));
-        tObj.id = uuidv4();
-        tObj.style.left = xMeum;
-        tObj.style.top = yMeum;
-        els[copyElIdx[0]].push(tObj);
-      } else if (index == 2 && eClass) {
-        //剪切
-        copyEl = els[elsIdx[0]][elsIdx[1]];
-        copyElIdx[0] = elsIdx[0];
-        copyElIdx[1] = elsIdx[1];
-        els[elsIdx[0]].splice(elsIdx[1], 1);
-        elsIdx[0] = null;
-        elsIdx[1] = null;
-        rectIsShow.value = false;
-      } else if (index == 3 && eClass) {
-        //删除
-        els[elsIdx[0]].splice(elsIdx[1], 1);
-        elsIdx[0] = null;
-        elsIdx[1] = null;
-        rectIsShow.value = false;
-      } else {
-        UseChangeZIndex(els, elsIdx, index);
-      }
-      handleBox.value.style.display = "none";
-    }
-    
-    return {
-      editorPlate,
-      rectIsShow,
-      rectStyle,
-      rect,
-      move,
-      els,
-      changeText,
-      changeSize,
-      changeRotate,
-      sublines,
-      changeRectShow,
-      styleFormat,
-      handleList,
-      openMeun,
-      handleBox,
-      handleMeum,
-    };
 
-  },
-};
+		// 定时器 为了判断是双击还是单击
+		let timer = null
+		let num = 0
+
+		//移动代码
+		function move(e, p, idx) {
+			if (p.class == 'img') {
+				e.preventDefault()
+			}
+			num++
+			if (timer) clearTimeout(timer)
+			timer = setTimeout(() => {
+				num = 0
+			}, 300)
+			if (
+				elsIdx[0] != undefined &&
+				{ ...p }.toString() != { ...els[elsIdx[0]][elsIdx[1]] }.toString()
+			) {
+				if (els[elsIdx[0]][0].class == 'text')
+					els[elsIdx[0]][elsIdx[1]].isEditable = false
+				num = 0
+			}
+			//判断两次点击的是否是同一个元素 不同更换elsIdx 换掉rectStyle里面的style和height
+			//如果是原来点击的是text 则需将text改为不是富文本的状态
+			if (elsIdx[0] != idx[0] || elsIdx[1] != idx[1]) {
+				elsIdx[0] = idx[0]
+				elsIdx[1] = idx[1]
+				rectStyle.style = p.style
+				rectStyle.height = e.target.offsetHeight
+				if (els[elsIdx[0]][0].class == 'text')
+					els[elsIdx[0]][elsIdx[1]].isEditable = false
+				num = 0
+			}
+			if (p.class == 'text' && num >= 2) {
+				p.isEditable = true
+				clearTimeout(timer)
+			} else {
+				UseMove(
+					e,
+					p,
+					editorPlate.value,
+					rect.value,
+					rectIsShow,
+					els,
+					elsIdx,
+					sublines
+				)
+			}
+		}
+
+		//改变文本时也改变内容 改变矩形选择框高度
+		function changeText(e, p) {
+			e.preventDefault()
+			p.content = e.target.innerText
+			rectStyle.height = e.target.offsetHeight
+		}
+
+		//旋转
+		function changeRotate(e) {
+			e.preventDefault()
+			UseRotate(els, elsIdx, editorPlate.value)
+		}
+
+		//改变矩形选择框展示状态
+		function changeRectShow() {
+			num = 0
+			if (elsIdx[0] != undefined && els[elsIdx[0]][0].class == 'text')
+				els[elsIdx[0]][elsIdx[1]].isEditable = false
+			rectIsShow.value = false
+			elsIdx[0] = null
+			elsIdx[1] = null
+			handleBox.value.style.display = 'none'
+		}
+
+		//样式格式化
+		function styleFormat(obj, type) {
+			for (let key in obj) {
+				if (
+					typeof obj[key] == 'number' &&
+					key != 'rotate' &&
+					key != 'fontWeight' &&
+					key != 'zIndex'
+				)
+					obj[key] = obj[key].toString() + 'px'
+			}
+			obj.backgroundImage = `url(${obj.backgroundImage})`
+			obj.transform = `rotate(${obj.rotate}deg)`
+			delete obj.rotate
+			if (type == 'btn') obj.lineHeight = obj.height
+			return obj
+		}
+
+		//右键点击菜单时的元素
+		let xMeum
+		let yMeum
+		//打开菜单栏
+		function openMeun(e) {
+			const lis = document.querySelectorAll('.handleBox li')
+
+			if (e.target.className == 'editorPlate') {
+				for (let i = 0; i < lis.length; i++)
+					if (i != 1) lis[i].className = 'ban'
+			} else {
+				for (let i = 0; i < lis.length; i++) lis[i].className = ''
+			}
+
+			const fStyle = editorPlate.value.getBoundingClientRect()
+			xMeum = e.pageX - fStyle.x
+			yMeum = e.pageY - fStyle.y
+			handleBox.value.style.left = xMeum + 'px'
+			handleBox.value.style.top = yMeum + 'px'
+			handleBox.value.style.display = 'block'
+		}
+
+		let copyEl
+		let copyElIdx = new Array(2)
+		//操作菜单栏
+		function handleMeum(e, index) {
+			let eClass = e.target.className == ''
+			if (index == 0 && eClass) {
+				//复制
+				copyEl = els[elsIdx[0]][elsIdx[1]]
+				copyElIdx[0] = elsIdx[0]
+				copyElIdx[1] = elsIdx[1]
+			} else if (index == 1 && copyEl) {
+				//粘贴
+				let tObj = JSON.parse(JSON.stringify(copyEl))
+				tObj.id = uuidv4()
+				tObj.style.left = xMeum
+				tObj.style.top = yMeum
+				els[copyElIdx[0]].push(tObj)
+			} else if (index == 2 && eClass) {
+				//剪切
+				copyEl = els[elsIdx[0]][elsIdx[1]]
+				copyElIdx[0] = elsIdx[0]
+				copyElIdx[1] = elsIdx[1]
+				els[elsIdx[0]].splice(elsIdx[1], 1)
+				elsIdx[0] = null
+				elsIdx[1] = null
+				rectIsShow.value = false
+			} else if (index == 3 && eClass) {
+				//删除
+				els[elsIdx[0]].splice(elsIdx[1], 1)
+				elsIdx[0] = null
+				elsIdx[1] = null
+				rectIsShow.value = false
+			} else {
+				UseChangeZIndex(els, elsIdx, index)
+			}
+			handleBox.value.style.display = 'none'
+		}
+
+		//编辑区域宽高
+		let editorStyle = reactive({
+			width: '0px',
+			height: '0px',
+		})
+		onMounted(() => {
+			editorStyle.height = document.body.offsetHeight + 'px'
+			editorStyle.width = document.body.offsetWidth + 'px'
+		})
+
+		return {
+			editorPlate,
+			rectIsShow,
+			rectStyle,
+			rect,
+			move,
+			els,
+			changeText,
+			changeSize,
+			changeRotate,
+			sublines,
+			changeRectShow,
+			styleFormat,
+			handleList,
+			openMeun,
+			handleBox,
+			handleMeum,
+			editorStyle,
+		}
+	},
+}
 </script>
 
 <style lang="less" scoped>
 .editorPlate {
-  position: relative;
-  width: 100%;
-  min-height: 100%;
-  box-shadow: 0 0 32px rgba(0, 0, 0, 0.4);
-  height: 2000px;
-  div {
-    position: absolute;
-    width: 100px;
-    word-wrap: break-word;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  a {
-    pointer-events: none;
-    color: #333;
-  }
-  input,
-  button,
-  img {
-    position: absolute;
-    box-sizing: border-box;
-  }
-  img {
-    position: absolute;
-  }
-  .button {
-    text-align: center;
-  }
-  .el {
-    top: 40px;
-    left: 200px;
-    height: 100px;
-    background-color: pink;
-  }
-  .text {
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  .rect {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    border: 1px solid #65a6fa;
-    box-sizing: border-box;
-    z-index: 888;
-    /* 点击上层元素可以穿透 触发下层元素 */
-    pointer-events: none;
-    span {
-      position: absolute;
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      background-color: #fff;
-      pointer-events: auto;
-    }
-    span:nth-of-type(-n + 4) {
-      width: 12px;
-      height: 12px;
-      border-radius: 0;
-      cursor: default;
-    }
-    .l {
-      top: 50%;
-      left: -7px;
-      transform: translateY(-50%);
-      cursor: w-resize;
-    }
-    .r {
-      top: 50%;
-      right: -7px;
-      transform: translateY(-50%);
-      cursor: e-resize;
-    }
-    .t {
-      top: -7px;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: n-resize;
-    }
-    .b {
-      bottom: -7px;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: s-resize;
-    }
+	position: relative;
+	width: 100%;
+	min-height: 100%;
+	box-shadow: 0 0 32px rgba(0, 0, 0, 0.4);
+	height: 2000px;
+	div {
+		position: absolute;
+		width: 100px;
+		word-wrap: break-word;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	a {
+		pointer-events: none;
+		color: #333;
+	}
+	input,
+	button,
+	img {
+		position: absolute;
+		box-sizing: border-box;
+	}
+	img {
+		position: absolute;
+	}
+	.button {
+		text-align: center;
+	}
+	.el {
+		top: 40px;
+		left: 200px;
+		height: 100px;
+		background-color: pink;
+	}
+	.text {
+		padding: 10px;
+		box-sizing: border-box;
+	}
+	.rect {
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		border: 1px solid #65a6fa;
+		box-sizing: border-box;
+		z-index: 888;
+		/* 点击上层元素可以穿透 触发下层元素 */
+		pointer-events: none;
+		span {
+			position: absolute;
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+			border: 1px solid rgba(0, 0, 0, 0.2);
+			background-color: #fff;
+			pointer-events: auto;
+		}
+		span:nth-of-type(-n + 4) {
+			width: 12px;
+			height: 12px;
+			border-radius: 0;
+			cursor: default;
+		}
+		.l {
+			top: 50%;
+			left: -7px;
+			transform: translateY(-50%);
+			cursor: w-resize;
+		}
+		.r {
+			top: 50%;
+			right: -7px;
+			transform: translateY(-50%);
+			cursor: e-resize;
+		}
+		.t {
+			top: -7px;
+			left: 50%;
+			transform: translateX(-50%);
+			cursor: n-resize;
+		}
+		.b {
+			bottom: -7px;
+			left: 50%;
+			transform: translateX(-50%);
+			cursor: s-resize;
+		}
 
-    .lt {
-      top: -7px;
-      left: -7px;
-      cursor: nw-resize;
-    }
+		.lt {
+			top: -7px;
+			left: -7px;
+			cursor: nw-resize;
+		}
 
-    .lb {
-      bottom: -7px;
-      left: -7px;
-      cursor: sw-resize;
-    }
+		.lb {
+			bottom: -7px;
+			left: -7px;
+			cursor: sw-resize;
+		}
 
-    .rt {
-      top: -7px;
-      right: -7px;
-      cursor: ne-resize;
-    }
+		.rt {
+			top: -7px;
+			right: -7px;
+			cursor: ne-resize;
+		}
 
-    .rb {
-      bottom: -7px;
-      right: -7px;
-      cursor: se-resize;
-    }
+		.rb {
+			bottom: -7px;
+			right: -7px;
+			cursor: se-resize;
+		}
 
-    .rotate {
-      width: 25px;
-      height: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -50px;
-      border: none;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      background: #fff url(~@/assets/rotate.svg) no-repeat center center;
-      background-size: 16px 16px;
-    }
-  }
-  .subline {
-    position: absolute;
-    background-color: #fb5127;
-  }
-  .handleBox {
-    position: absolute;
-    width: 153px;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    font-size: 16px;
-    display: none;
-    border-radius: 4px;
-    z-index: 1000;
-    background-color: #fff;
-    li {
-      position: relative;
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      border-bottom: 1px solid #d9d9d9;
-      list-style: none;
-      box-sizing: border-box;
-      cursor: pointer;
-      i {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
-      }
-      span {
-        display: inline-block;
-        width: calc(100% - 50px);
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
-      }
-    }
-    li:hover {
-      color: #65a6fa;
-    }
-    li.ban {
-      color: rgb(183, 180, 180);
-      cursor: disabled;
-    }
-  }
+		.rotate {
+			width: 25px;
+			height: 25px;
+			left: 50%;
+			transform: translateX(-50%);
+			bottom: -50px;
+			border: none;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+			background: #fff url(~@/assets/rotate.svg) no-repeat center center;
+			background-size: 16px 16px;
+		}
+	}
+	.subline {
+		position: absolute;
+		background-color: #fb5127;
+	}
+	.handleBox {
+		position: absolute;
+		width: 153px;
+		border-radius: 6px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+		font-size: 16px;
+		display: none;
+		border-radius: 4px;
+		z-index: 1000;
+		background-color: #fff;
+		li {
+			position: relative;
+			width: 100%;
+			height: 50px;
+			line-height: 50px;
+			border-bottom: 1px solid #d9d9d9;
+			list-style: none;
+			box-sizing: border-box;
+			cursor: pointer;
+			i {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+			}
+			span {
+				display: inline-block;
+				width: calc(100% - 50px);
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+			}
+		}
+		li:hover {
+			color: #65a6fa;
+		}
+		li.ban {
+			color: rgb(183, 180, 180);
+			cursor: disabled;
+		}
+	}
 }
 </style>
