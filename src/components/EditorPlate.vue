@@ -5,6 +5,7 @@
 		:style="editorStyle"
 		@mousedown="changeRectShow"
 		@contextmenu.prevent="openMeun"
+		@scroll.prevent="test"
 	>
 		<!-- 矩形 -->
 		<div
@@ -380,9 +381,17 @@ export default {
 			width: '0px',
 			height: '0px',
 		})
+		const test = (e) => {
+			console.log(e.target)
+		}
 		onMounted(() => {
+			//编辑区大小
 			editorStyle.width = document.body.clientWidth + 'px'
 			editorStyle.height = document.body.clientHeight + 'px'
+			//编辑区滚动条
+
+			// let editorPlate = document.querySelector('.editorPlate')
+			// editorPlate.addEventListener('scroll', test, true)
 		})
 
 		return {
@@ -405,6 +414,7 @@ export default {
 			constituenStyle,
 			moveCons,
 			editorStyle,
+			test,
 		}
 	},
 }
@@ -414,7 +424,6 @@ export default {
 .editorPlate {
 	position: relative;
 	width: 100%;
-	min-height: 100%;
 	box-shadow: 0 0 32px rgba(0, 0, 0, 0.4);
 	height: 2000px;
 	div {

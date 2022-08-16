@@ -43,6 +43,7 @@ export default {
 		useElStore.els = els
 		const newSomething = (id) => {
 			let t = JSON.parse(JSON.stringify(createEl[id]))
+			t.style.left = useElStore.editorScroll + 200
 			t.id = uuidv4()
 			if (id === 2 && imgInput) {
 				imgInput.addEventListener('click', (e) => {
