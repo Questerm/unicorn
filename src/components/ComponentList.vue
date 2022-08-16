@@ -21,15 +21,20 @@ import { v4 as uuidv4 } from 'uuid'
 import elStore from '@/store/elStore'
 import { reactive } from '@vue/reactivity'
 import { onMounted } from 'vue'
+import snapshot from '@/store/snapshot'
+import { deepCopy } from '@/hooks/deepCopy'
 
 export default {
 	name: 'ComponentList',
 	setup() {
 		let imgInput
 		onMounted(() => {
-			imgInput = document.getElementsByClassName('imgInput')[0]
+			imgInput = document.getElementsByClassName('imgInput')[0];
+			 useSnapshot.snapshotData[++useSnapshot.snapshotIndex] = deepCopy(useElStore.els);
 		})
 		let useElStore = elStore()
+		let useSnapshot = snapshot();
+		
 		//组件列表
 		const list = [
 			{ id: 1, title: '盒子', icon: require('../assets/' + 'hezi.png') },
@@ -42,6 +47,11 @@ export default {
 		let els = reactive(Array.from(new Array(list.length), () => []))
 		useElStore.els = els
 		const newSomething = (id) => {
+			if (JSON.parse(JSON.stringify(useElStore.els) === '{}')) {
+        		els = reactive(Array.from(new Array(list.length), () => []));
+      		} else {
+        		els = useElStore.els
+      		}
 			let t = JSON.parse(JSON.stringify(createEl[id]))
 			t.style.left = useElStore.editorScroll + 200
 			t.id = uuidv4()
@@ -66,6 +76,9 @@ export default {
 			} else {
 				els[id].push(t)
 			}
+			useElStore.els = els;
+			//添加元素时，获得新的快照
+			useSnapshot.recordSnapshot();
 		}
 		const createEl = [
 			//创建盒子

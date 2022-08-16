@@ -30,5 +30,6 @@ export default (p, rect) => {
             rectChild[i].style.display='block';
         }
     }
+    console.log('true')
     return true;
 }

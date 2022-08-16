@@ -9,17 +9,18 @@
 	>
 		<!-- 矩形 -->
 		<div
-			v-for="(p, index) of els[0]"
+			v-for="(p, index) of useElStore.els[0]"
 			:key="p.id"
 			:class="p.class"
 			:style="{
 				...styleFormat({ ...p.style }),
 			}"
 			@mousedown.stop="move($event, p, [0, index])"
+			@mouseup="addSnapshot"
 		></div>
 		<!-- 文本 -->
 		<div
-			v-for="(p, index) of els[1]"
+			v-for="(p, index) of useElStore.els[1]"
 			:key="p.id"
 			:class="p.class"
 			:style="{
@@ -27,28 +28,31 @@
 			}"
 			:contenteditable="p.isEditable"
 			@mousedown.stop="move($event, p, [1, index])"
+			@mouseup="addSnapshot"
 			@input="changeText($event, p)"
 		>
 			{{ p.content }}
 		</div>
 		<!-- 图片 -->
 		<img
-			v-for="(p, index) of els[2]"
+			v-for="(p, index) of useElStore.els[2]"
 			:key="p.id"
 			:class="p.class"
 			:src="p.url"
 			:style="{ ...styleFormat({ ...p.style }) }"
 			@mousedown.stop="move($event, p, [2, index])"
+			@mouseup="addSnapshot"
 		/>
 		<!-- 按钮 -->
 		<button
-			v-for="(p, index) of els[3]"
+			v-for="(p, index) of useElStore.els[3]"
 			:key="p.id"
 			:class="p.class"
 			:style="{
 				...styleFormat({ ...p.style }, 'btn'),
 			}"
 			@mousedown.stop="move($event, p, [3, index])"
+			@mouseup="addSnapshot"
 		>
 			<a :style="{ color: p.style.color }" :href="p.other.href">{{
 				p.other.content
@@ -56,13 +60,14 @@
 		</button>
 		<!-- 表单 -->
 		<input
-			v-for="(p, index) of els[4]"
+			v-for="(p, index) of useElStore.els[4]"
 			:key="p.id"
 			:class="p.class"
 			:style="{
 				...styleFormat({ ...p.style }),
 			}"
 			@mousedown.stop="move($event, p, [4, index])"
+			@mouseup="addSnapshot"
 			:type="p.other.type"
 			v-model="p.content"
 			:placeholder="p.other.tip"
@@ -139,10 +144,12 @@ import UseGetSelEls from '@/hooks/UseGetSelEls'
 import UseMoveEls from '@/hooks/UseMoveEls'
 import elStore from '@/store/elStore.js'
 import { v4 as uuidv4 } from 'uuid'
+import snapshot from '@/store/snapshot'
 export default {
 	name: 'EditorPlate',
 	setup() {
 		const useElStore = elStore()
+		const useSnapshot = snapshot();
 		const editorPlate = ref(null)
 		const rect = ref(null)
 		const handleBox = ref(null)
@@ -199,13 +206,15 @@ export default {
 		let rectStyle = useElStore.rectStyle
 		//辅助线属性数组
 		let sublines = reactive([])
+		//判断是否是移动操作
+		let isMove = ref(false);
 
 		//改变大小
 		function changeSize(e) {
 			e.preventDefault()
 			UseChangeSize(
 				e,
-				els[elsIdx[0]][elsIdx[1]],
+				useElStore.els[elsIdx[0]][elsIdx[1]],
 				editorPlate.value,
 				rectStyle,
 				elsIdx[1]
@@ -216,8 +225,18 @@ export default {
 		let timer = null
 		let num = 0
 
+		//如果是移动代码则触发元素的mouseup事件去添加快照
+		function addSnapshot() {
+			if (isMove) {
+				//移动元素时，获得新的快照
+				useSnapshot.recordSnapshot();
+			}
+			isMove = false;
+		}
+
 		//移动代码
 		function move(e, p, idx) {
+			isMove = true;
 			if (p.class == 'img') {
 				e.preventDefault()
 			}
@@ -228,10 +247,10 @@ export default {
 			}, 300)
 			if (
 				elsIdx[0] != -1 &&
-				{ ...p }.toString() != { ...els[elsIdx[0]][elsIdx[1]] }.toString()
+				{ ...p }.toString() != { ...useElStore.els[elsIdx[0]][elsIdx[1]] }.toString()
 			) {
-				if (els[elsIdx[0]][0].class == 'text')
-					els[elsIdx[0]][elsIdx[1]].isEditable = false
+				if (useElStore.els[elsIdx[0]][0].class == 'text')
+					useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
 				num = 0
 			}
 			//判断两次点击的是否是同一个元素 不同更换elsIdx 换掉rectStyle里面的style和height
@@ -241,8 +260,8 @@ export default {
 				elsIdx[1] = idx[1]
 				rectStyle.style = p.style
 				rectStyle.height = e.target.offsetHeight
-				if (els[elsIdx[0]][0].class == 'text')
-					els[elsIdx[0]][elsIdx[1]].isEditable = false
+				if (useElStore.els[elsIdx[0]][0].class == 'text')
+					useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
 				num = 0
 			}
 			if (p.class == 'text' && num >= 2) {
@@ -255,11 +274,15 @@ export default {
 					editorPlate.value,
 					rect.value,
 					rectIsShow,
-					els,
+					useElStore.els,
 					elsIdx,
 					sublines
 				)
 			}
+			//将数据rect.value发送给Operation插件
+			useElStore.rectValue = rect.value;
+			//将数据rect.rectIsShow发送给Operation插件
+			useElStore.rectIsShow = rectIsShow;
 		}
 
 		//改变文本时也改变内容 改变矩形选择框高度
@@ -272,7 +295,7 @@ export default {
 		//旋转
 		function changeRotate(e) {
 			e.preventDefault()
-			UseRotate(els, elsIdx, editorPlate.value)
+			UseRotate(useElStore.els, elsIdx, editorPlate.value)
 		}
 
 		let dels = []
@@ -280,16 +303,17 @@ export default {
 		function changeRectShow(e) {
 			e.preventDefault()
 			num = 0
-			if (elsIdx[0] != -1 && els[elsIdx[0]][0].class == 'text')
-				els[elsIdx[0]][elsIdx[1]].isEditable = false
+			if (elsIdx[0] != -1 && useElStore.els[elsIdx[0]][0].class == 'text')
+				useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
 			rectIsShow.value = false
 			elsIdx[0] = -1
 			elsIdx[1] = -1
 			handleBox.value.style.display = 'none'
 			constituenStyle.display = 'none'
-			UseGetSelEls(e, editorPlate.value, els, constituenStyle).then((x) => {
+			UseGetSelEls(e, editorPlate.value, useElStore.els, constituenStyle).then((x) => {
 				dels = x
 			})
+			console.log('false')
 		}
 
 		//样式格式化
@@ -415,6 +439,9 @@ export default {
 			moveCons,
 			editorStyle,
 			test,
+			useElStore,
+			useSnapshot,
+			addSnapshot
 		}
 	},
 }

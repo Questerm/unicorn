@@ -5,6 +5,8 @@
  * @param {矩阵选择框Dom} rect
  * @param {为了获取text Dom 获取文本框的高度} idx
  */
+import snapshot from "../store/snapshot";
+
 export default (e, el, f, rect, idx) => {
     const elName = e.target.className;
     const elStyle = el.style;
@@ -84,6 +86,9 @@ export default (e, el, f, rect, idx) => {
         }
     }
     document.onmouseup = () => {
+        const useSnapshot = snapshot();
+        //改变元素大小时时，获得新的快照
+        useSnapshot.recordSnapshot();
         document.onmousemove = null;
         document.onmouseup = null;
     }
