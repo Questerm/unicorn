@@ -145,11 +145,12 @@ import UseMoveEls from '@/hooks/UseMoveEls'
 import elStore from '@/store/elStore.js'
 import { v4 as uuidv4 } from 'uuid'
 import snapshot from '@/store/snapshot'
+// import { storeToRefs } from 'pinia'
 export default {
 	name: 'EditorPlate',
 	setup() {
 		const useElStore = elStore()
-		const useSnapshot = snapshot();
+		const useSnapshot = snapshot()
 		const editorPlate = ref(null)
 		const rect = ref(null)
 		const handleBox = ref(null)
@@ -197,17 +198,20 @@ export default {
 			},
 		]
 
+		// let { elsIdx, els, rectStyle } = storeToRefs(useElStore)
+		// console.log(els)
 		//选择矩形框现在的位置
 		let elsIdx = useElStore.elsIdx
 		//获取store里面的el
 		let els = useElStore.els
+		console.log('@@@' + els)
 		//矩形选择框是否出现
 		let rectIsShow = ref(false)
 		let rectStyle = useElStore.rectStyle
 		//辅助线属性数组
 		let sublines = reactive([])
 		//判断是否是移动操作
-		let isMove = ref(false);
+		let isMove = ref(false)
 
 		//改变大小
 		function changeSize(e) {
@@ -229,14 +233,14 @@ export default {
 		function addSnapshot() {
 			if (isMove) {
 				//移动元素时，获得新的快照
-				useSnapshot.recordSnapshot();
+				useSnapshot.recordSnapshot()
 			}
-			isMove = false;
+			isMove = false
 		}
 
 		//移动代码
 		function move(e, p, idx) {
-			isMove = true;
+			isMove = true
 			if (p.class == 'img') {
 				e.preventDefault()
 			}
@@ -247,7 +251,8 @@ export default {
 			}, 300)
 			if (
 				elsIdx[0] != -1 &&
-				{ ...p }.toString() != { ...useElStore.els[elsIdx[0]][elsIdx[1]] }.toString()
+				{ ...p }.toString() !=
+					{ ...useElStore.els[elsIdx[0]][elsIdx[1]] }.toString()
 			) {
 				if (useElStore.els[elsIdx[0]][0].class == 'text')
 					useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
@@ -280,9 +285,9 @@ export default {
 				)
 			}
 			//将数据rect.value发送给Operation插件
-			useElStore.rectValue = rect.value;
+			useElStore.rectValue = rect.value
 			//将数据rect.rectIsShow发送给Operation插件
-			useElStore.rectIsShow = rectIsShow;
+			useElStore.rectIsShow = rectIsShow
 		}
 
 		//改变文本时也改变内容 改变矩形选择框高度
@@ -310,9 +315,11 @@ export default {
 			elsIdx[1] = -1
 			handleBox.value.style.display = 'none'
 			constituenStyle.display = 'none'
-			UseGetSelEls(e, editorPlate.value, useElStore.els, constituenStyle).then((x) => {
-				dels = x
-			})
+			UseGetSelEls(e, editorPlate.value, useElStore.els, constituenStyle).then(
+				(x) => {
+					dels = x
+				}
+			)
 			console.log('false')
 		}
 
@@ -441,7 +448,7 @@ export default {
 			test,
 			useElStore,
 			useSnapshot,
-			addSnapshot
+			addSnapshot,
 		}
 	},
 }

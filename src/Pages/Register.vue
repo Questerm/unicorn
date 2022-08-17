@@ -56,6 +56,9 @@
 <script>
 import { reactive, computed } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { register } from '@/api/login'
+import { useRouter } from 'vue-router'
+import { message } from 'ant-design-vue'
 
 export default {
 	components: { UserOutlined, LockOutlined },
@@ -65,9 +68,16 @@ export default {
 			password: '',
 		})
 
-		//登录成功
-		const onFinish = (values) => {
-			console.log('Success:', values)
+		//注册成功
+		const router = useRouter()
+		const onFinish = async (values) => {
+			const data = await register(values)
+			console.log(data)
+			if (data.status == 1) {
+				router.push('/login')
+			} else if (data.status == 0) {
+				message.info(`${data.msg}`)
+			}
 		}
 
 		//是否禁用

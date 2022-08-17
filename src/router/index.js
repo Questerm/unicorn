@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from '../Pages/EditorPage.vue'
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{
-        path: '/',
-        component: Home
+        path: '/editorPage/:productName',
+        component: () =>
+            import ('@/Pages/EditorPage.vue')
     }, {
         path: '/login',
         name: 'login',
@@ -22,7 +22,7 @@ const router = createRouter({
         component: () =>
             import ('@/Pages/UserPage.vue')
     }, {
-        path: '/guide',
+        path: '/',
         name: 'guide',
         component: () =>
             import ('@/Pages/Guide.vue')

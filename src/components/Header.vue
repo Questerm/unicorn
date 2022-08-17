@@ -4,12 +4,20 @@
 			<img src="../assets/logo.png" alt="logo" />
 		</a>
 		<div class="hd-btns">
-			<a-button class="btn">保存</a-button>
+			<a-button class="btn" @click="save">保存</a-button>
+			<a-modal
+				v-model:visible="saveVisible"
+				title="保存项目"
+				@ok="addOk"
+				@cancel="saveVisible = false"
+			>
+				<a-input v-model:value="projectName" placeholder="请输入项目名称" />
+			</a-modal>
 			<a-button class="btn" @click="preview">预览</a-button>
 			<a-modal
 				okText="确认"
 				cancelText="取消"
-				v-model:visible="visible"
+				v-model:visible="preVisible"
 				title="预览"
 				@ok="handleOk"
 			>
@@ -21,16 +29,13 @@
 			<div class="user-img"></div>
 			<a-dropdown>
 				<a class="ant-dropdown-link" @click.prevent>
-					Quester
+					{{ username }}
 					<DownOutlined />
 				</a>
 				<template #overlay>
 					<a-menu>
 						<a-menu-item>
-							<a href="javascript:;">我的模板</a>
-						</a-menu-item>
-						<a-menu-item>
-							<a href="javascript:;">首页</a>
+							<a href="/#/userPage">我的模板</a>
 						</a-menu-item>
 					</a-menu>
 				</template>
@@ -40,37 +45,85 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, inject, reactive, ref } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
+import userStore from '@/store/userStore'
+import elStore from '@/store/elStore'
+import { saveTemplate } from '@/api'
+import { storeToRefs } from 'pinia'
+import { message } from 'ant-design-vue'
+
 export default defineComponent({
 	name: 'Header',
 	components: {
 		DownOutlined,
 	},
 	setup() {
+		//路由
 		const router = useRouter()
-		//预览效果
 
+		const uStore = userStore()
+		const useElStore = elStore()
+		let { els } = storeToRefs(useElStore)
+
+		const username = computed(() => uStore.username)
+		//预览效果
 		const { href } = router.resolve({
 			name: 'preview',
 			params: {
-				projectId: '123',
+				projectId: uStore.username,
 			},
 		})
 
 		const modalText = ref('即将要跳转到预览页面')
-		const visible = ref(false)
+		const preVisible = ref(false)
 		const preview = () => {
-			visible.value = true
+			preVisible.value = true
 		}
 
 		const handleOk = () => {
-			visible.value = false
+			preVisible.value = false
 			window.open(href)
 		}
 
-		return { preview, modalText, visible, handleOk }
+		//保存项目
+		//新建项目相关
+		const saveVisible = ref(false)
+
+		const projectName = ref(inject('productName'))
+
+		const saveData = reactive({
+			username: '',
+			content: {},
+			productName: '',
+		})
+		const save = () => {
+			saveVisible.value = true
+		}
+
+		const addOk = async () => {
+			saveData.username = uStore.username
+			saveData.content = JSON.stringify(els.value)
+			console.log(els.value)
+			saveData.productName = projectName.value
+			const data = await saveTemplate(saveData)
+			console.log(data)
+			saveVisible.value = false
+			message.info('保存成功')
+		}
+
+		return {
+			preview,
+			addOk,
+			save,
+			modalText,
+			preVisible,
+			projectName,
+			saveVisible,
+			username,
+			handleOk,
+		}
 	},
 })
 </script>

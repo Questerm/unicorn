@@ -21,7 +21,27 @@
 			<div class="avator">
 				<user-outlined />
 			</div>
-			<div class="toLogin" @click="toLogin">登录 / 注册</div>
+			<div class="toLogin" v-if="username === ''" @click="toLogin">
+				登录 / 注册
+			</div>
+			<div class="toLogin" v-else>
+				<a-dropdown>
+					<a class="ant-dropdown-link" @click.prevent>
+						{{ username }}
+						<DownOutlined />
+					</a>
+					<template #overlay>
+						<a-menu>
+							<a-menu-item>
+								<div @click="toUserPage">个人中心</div>
+							</a-menu-item>
+							<a-menu-item>
+								<div @click="outLogin">退出登录</div>
+							</a-menu-item>
+						</a-menu>
+					</template>
+				</a-dropdown>
+			</div>
 		</div>
 	</div>
 </template>
@@ -33,6 +53,8 @@ import {
 	UserOutlined,
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
+import { computed } from '@vue/runtime-core'
+import userStore from '@/store/userStore'
 
 export default {
 	components: { VideoCameraOutlined, ProjectOutlined, UserOutlined },
@@ -51,8 +73,16 @@ export default {
 		const toLogin = () => {
 			router.push('/login')
 		}
+		//退出登录
+		const uStore = userStore()
+		const outLogin = () => {
+			uStore.username = ''
+			router.push('/login')
+		}
 
-		return { toGuide, toUserPage, toLogin }
+		const username = computed(() => uStore.username)
+
+		return { toGuide, toUserPage, toLogin, outLogin, username }
 	},
 }
 </script>

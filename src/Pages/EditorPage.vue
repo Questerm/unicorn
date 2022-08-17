@@ -30,11 +30,18 @@ import Operation from '../components/Operation.vue'
 import Setting from '../components/Setting.vue'
 import EditorPlate from '../components/EditorPlate.vue'
 import elStore from '@/store/elStore.js'
+import { onBeforeUnmount, onMounted, provide, ref } from '@vue/runtime-core'
+import { useRoute } from 'vue-router'
+import { getRecentlySave } from '@/api'
+import userStore from '@/store/userStore'
+// import { storeToRefs } from 'pinia'
 
 export default {
 	name: 'Home',
 	components: { Header, ComponentList, Operation, Setting, EditorPlate },
 	setup() {
+		const route = useRoute()
+
 		// 防抖
 		function debounce(fn, wait) {
 			let timeoutID = null
@@ -44,12 +51,32 @@ export default {
 				timeoutID = setTimeout(fn, wait, e, flag)
 			}
 		}
-		const useElStore = elStore()
 		const scrollHandle = (e) => {
 			useElStore.editorScroll = e.target.scrollLeft
 			console.log(e.target.scrollLeft)
 		}
 		const scroll = debounce(scrollHandle, 1000)
+
+		const useElStore = elStore()
+		const uStore = userStore()
+		//获取保存模板数据
+		const productName = ref(route.params.productName)
+		provide('productName', productName)
+		const getSaveByName = async () => {
+			const { data } = await getRecentlySave(
+				uStore.username,
+				route.params.productName
+			)
+			console.log(data)
+		}
+
+		onMounted(() => {
+			getSaveByName()
+		})
+
+		onBeforeUnmount(() => {
+			useElStore.updataEls(Array.from(new Array(5), () => []))
+		})
 
 		return { scroll }
 	},

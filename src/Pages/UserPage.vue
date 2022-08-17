@@ -8,10 +8,14 @@
 						>U
 					</a-avatar>
 				</div>
-				<div class="username" @click="turnLogin">登录 / 注册</div>
+				<div class="username" v-if="username === ''" @click="turnLogin">
+					登录 / 注册
+				</div>
+				<div class="username" v-if="username !== ''">{{ username }}</div>
+
 				<div class="projectInfo">
-					<div class="projectCount">项目数：{{ projectCount }}</div>
-					<div class="Edited">已编辑：{{ editedCount }}</div>
+					<div class="projectCount">项目数：{{ `${projects.length} / 5` }}</div>
+					<div class="Edited">已编辑：{{ projects.length }}</div>
 					<div class="Published">已发布：{{ publishedCount }}</div>
 				</div>
 			</div>
@@ -47,7 +51,7 @@
 									:style="{ fontSize: '23px', color: '#8dbe10' }"
 								/>
 								<span>新建项目</span>
-								<a-modal
+								<!-- <a-modal
 									:visible="addVisible"
 									title="新建项目"
 									@ok="addOk"
@@ -57,20 +61,31 @@
 										v-model:value="addValue"
 										placeholder="请输入项目名称"
 									/>
-								</a-modal>
+								</a-modal> -->
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="pro proItem">
+				<div
+					class="pro proItem"
+					:class="
+						(index == 0 && projects.length == 1) ||
+						(index == 3 && projects.length == 4)
+							? 'right'
+							: ''
+					"
+					v-for="(pro, index) in projects"
+					:key="index"
+				>
 					<div class="addProject">
 						<div class="addImg">
 							<file-outlined :style="{ fontSize: '60px', color: '#08c' }" />
-							<div class="proName">第一个项目</div>
+							<div class="proName">{{ pro.productName }}</div>
+							<div class="saveTime">{{ pro.saveTime }}</div>
 						</div>
 
 						<div class="create animate__bounce">
-							<div class="importPro createPro">
+							<div class="importPro createPro" @click="editorProject(pro)">
 								<edit-outlined
 									class="proIcon"
 									:style="{ fontSize: '23px', color: '#2546ee' }"
@@ -84,39 +99,7 @@
 								/>
 								<span>保存项目</span>
 							</div>
-							<div class="addPro createPro" @click="deletePro">
-								<delete-outlined
-									class="proIcon"
-									:style="{ fontSize: '23px', color: '#ee2c25' }"
-								/>
-								<span>删除项目</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="pro proItem">
-					<div class="addProject">
-						<div class="addImg">
-							<file-outlined :style="{ fontSize: '60px', color: '#08c' }" />
-							<div class="proName">第二个项目</div>
-						</div>
-
-						<div class="create animate__bounce">
-							<div class="importPro createPro">
-								<edit-outlined
-									class="proIcon"
-									:style="{ fontSize: '23px', color: '#2546ee' }"
-								/>
-								<span>编辑项目</span>
-							</div>
-							<div class="addPro createPro" @click="savePro">
-								<save-outlined
-									class="proIcon"
-									:style="{ fontSize: '23px', color: '#25ebee' }"
-								/>
-								<span>保存项目</span>
-							</div>
-							<div class="addPro createPro" @click="deletePro">
+							<div class="addPro createPro" @click="deletePro(pro)">
 								<delete-outlined
 									class="proIcon"
 									:style="{ fontSize: '23px', color: '#ee2c25' }"
@@ -132,7 +115,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import HeadNav from '@/components/HeadNav.vue'
 import {
 	PlusCircleOutlined,
@@ -145,6 +128,9 @@ import {
 } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
+import { getSaveList, deleteTemplate } from '@/api'
+import userStore from '@/store/userStore'
+import elStore from '@/store/elStore'
 
 export default {
 	components: {
@@ -159,10 +145,16 @@ export default {
 	},
 	setup() {
 		const router = useRouter()
+		const uStore = userStore()
+		const useElStore = elStore()
+		const username = uStore.username
 
 		let projectCount = ref('—')
 		let editedCount = ref('—')
 		let publishedCount = ref('—')
+
+		//项目数组
+		let projects = ref([])
 
 		//跳转登录/注册
 		const turnLogin = () => {
@@ -188,6 +180,7 @@ export default {
 		const addProject = () => {
 			addValue.value = ''
 			addVisible.value = true
+			router.push(`/editorPage/新建项目`)
 		}
 		const addOk = () => {
 			console.log('新建成功')
@@ -195,28 +188,52 @@ export default {
 		}
 
 		//删除项目（需要确认）
-		const deletePro = () => {
+		let deleteData = reactive({
+			username: '',
+			productName: '',
+		})
+		const deletePro = (pro) => {
 			Modal.confirm({
 				title: '确定',
 				content: '确定要删除该项目吗',
 				okText: '确定',
 				cancelText: '取消',
 				async onOk() {
-					try {
-						return await new Promise((resolve, reject) => {
-							console.log(12334)
-							setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-						})
-					} catch {
-						return console.log('Oops errors!')
-					}
+					deleteData.username = username
+					deleteData.productName = pro.productName
+
+					const { data } = deleteTemplate(deleteData)
+					console.log(data)
+					projects.value = []
+					getProList()
 				},
 				onCancel() {},
 			})
 		}
 
+		//编辑项目
+		const editorProject = (pro) => {
+			useElStore.els = pro.content
+			console.log(pro.productName)
+			router.push({
+				path: `/editorPage/${pro.productName}`,
+			})
+		}
+
 		//保存项目
 		const savePro = () => {}
+
+		//获取项目列表
+		const getProList = async () => {
+			const { data, status } = await getSaveList(username)
+			if (status == 1) {
+				projects.value.push(...data.list)
+			}
+		}
+
+		onMounted(() => {
+			getProList()
+		})
 
 		return {
 			projectCount,
@@ -233,6 +250,9 @@ export default {
 			addProject,
 			addOk,
 			savePro,
+			editorProject,
+			projects,
+			username,
 		}
 	},
 }
@@ -264,7 +284,7 @@ export default {
 			margin-right: 50px;
 		}
 		.username {
-			font-size: 15px;
+			font-size: 20px;
 			cursor: pointer;
 			&:hover {
 				color: #5b9bc8;
@@ -293,8 +313,15 @@ export default {
 				font-size: 20px;
 			}
 			.proName {
+				font-size: 20px;
 				position: absolute;
 				top: 5px;
+				right: 5px;
+			}
+			.saveTime {
+				font-size: 16px;
+				position: absolute;
+				bottom: 5px;
 				right: 5px;
 			}
 		}
@@ -309,6 +336,7 @@ export default {
 			border-radius: 8px;
 			border: 1px solid #707070;
 			font-size: 20px;
+			margin-bottom: 15px;
 			&:hover .addImg {
 				display: none;
 			}
@@ -340,5 +368,8 @@ export default {
 			}
 		}
 	}
+}
+.right {
+	margin-right: 36.5%;
 }
 </style>

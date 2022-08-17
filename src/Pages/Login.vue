@@ -57,18 +57,27 @@
 <script>
 import { reactive, computed } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { login } from '@/api/login'
+import userStore from '@/store/userStore.js'
+import { useRouter } from 'vue-router'
 
 export default {
 	components: { UserOutlined, LockOutlined },
 	setup() {
 		const formState = reactive({
-			username: '',
-			password: '',
+			username: '123',
+			password: '123',
 		})
 
+		const router = useRouter()
+
 		//登录成功
-		const onFinish = (values) => {
-			console.log('Success:', values)
+		const uStore = userStore()
+		const onFinish = async (values) => {
+			const data = await login(values)
+			uStore.username = values.username
+			router.push('/userPage')
+			console.log(data)
 		}
 
 		//是否禁用

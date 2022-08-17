@@ -16,5 +16,9 @@ export default defineStore('mystore', {
         }
     },
     getters: {},
-    actions: {}
+    actions: {
+        updataEls(newEls) {
+            this.els = newEls
+        }
+    }
 })

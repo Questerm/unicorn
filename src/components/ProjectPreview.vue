@@ -63,6 +63,7 @@
 import { onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import elStore from '@/store/elStore'
+import { storeToRefs } from 'pinia'
 
 export default {
 	setup() {
@@ -71,7 +72,7 @@ export default {
 
 		//pinia数据
 		const useElStore = elStore()
-		let els = useElStore.els
+		let { els } = storeToRefs(useElStore)
 
 		//样式格式化
 		function styleFormat(obj, type) {
