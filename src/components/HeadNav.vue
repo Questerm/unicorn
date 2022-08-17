@@ -63,7 +63,7 @@ export default {
 		const router = useRouter()
 		//跳转引导页
 		const toGuide = () => {
-			router.push('/guide')
+			router.push('/')
 		}
 		//跳转个人中心
 		const toUserPage = () => {
