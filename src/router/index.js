@@ -34,6 +34,12 @@ const router = createRouter({
             import ('@/components/ProjectPreview.vue'),
         props: true
 
+    }, {
+        path: '/publish/:productName',
+        name: 'publish',
+        component: () =>
+            import ('@/components/Publish.vue'),
+        props: true
     }]
 })
 

@@ -23,7 +23,17 @@
 			>
 				<p>{{ modalText }}</p>
 			</a-modal>
-			<a-button class="btn">发布</a-button>
+			<a-button class="btn" @click="publish">发布</a-button>
+			<a-modal
+				okText="复制"
+				cancelText="取消"
+				v-model:visible="pubVisible"
+				title="发布"
+				@ok="pubOk"
+			>
+				<p>项目地址</p>
+				<a-input v-model:value="publishHref" id="input" />
+			</a-modal>
 		</div>
 		<div class="hd-user">
 			<div class="user-img"></div>
@@ -90,9 +100,7 @@ export default defineComponent({
 		//保存项目
 		//新建项目相关
 		const saveVisible = ref(false)
-
 		const projectName = ref(inject('productName'))
-
 		const saveData = reactive({
 			username: '',
 			content: {},
@@ -113,6 +121,27 @@ export default defineComponent({
 			message.info('保存成功')
 		}
 
+		//发布
+		const pubVisible = ref(false)
+		let publishHref = ref('')
+		const publish = () => {
+			if (confirm('确定将本项目发布吗')) {
+				pubVisible.value = true
+				const { href } = router.resolve({
+					name: 'publish',
+					params: {
+						projectName: projectName.value,
+					},
+				})
+				publishHref.value = 'http://localhost:8080/' + href
+			}
+		}
+		const pubOk = () => {
+			const input = document.getElementById('input')
+			input.select()
+			document.execCommand('copy')
+		}
+
 		return {
 			preview,
 			addOk,
@@ -123,6 +152,10 @@ export default defineComponent({
 			saveVisible,
 			username,
 			handleOk,
+			publish,
+			pubVisible,
+			pubOk,
+			publishHref,
 		}
 	},
 })
