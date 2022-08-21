@@ -7,21 +7,17 @@
     <div v-for="item in list" :key="item.id" class="ani" @click="clickAnimation(item.title)">
         <p class="itemP">{{item.title}}</p>
     </div>
+    <div class="cancleAni" @click="cancleAnimation">取消动画</div>
   </div>
 </template>
 
 <script>
-import { toggleClassName } from '@/hooks/AnimationAttr';
 import elStore from '@/store/elStore.js';
-// import snapshot from '@/store/snapshot.js';
 
 export default {
   name: 'Animation',
     setup() { 
-    let useElStore = elStore()
-        // let useSnapshot = snapshot();
-        // let els = useElStore.els;
-        // let elsIdx = useElStore.elsIdx;
+        let useElStore = elStore();
     // 动画列表
     const list = [
       {id:1,title:'放大'},
@@ -33,30 +29,68 @@ export default {
         const clickAnimation = (title) => {
         switch (title){
             case '放大':
-                toggleClassName(document.querySelectorAll('.editorPlate .'+useElStore.els[useElStore.elsIdx[0]][0].class)[useElStore.elsIdx[1]], 'animation1');   
-                console.log(1);
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation1/) == null) {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation1';
+                } else {
+                    let reg = new RegExp(/ animation1/);
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                }
                 break;
             case '缩小':
-                toggleClassName(document.querySelectorAll('.editorPlate .'+useElStore.els[useElStore.elsIdx[0]][0].class)[useElStore.elsIdx[1]], 'animation2');
-                console.log(2);
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation2/) == null) {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation2';
+                } else {
+                    let reg = new RegExp(/ animation2/);
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                }
                 break;
             case '抖动':
-                toggleClassName(document.querySelectorAll('.editorPlate .'+useElStore.els[useElStore.elsIdx[0]][0].class)[useElStore.elsIdx[1]], 'animation3');
-                console.log(3);
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation3/) == null) {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation3';
+                } else {
+                    let reg = new RegExp(/ animation3/);
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                }
                 break;
             case '上下移动':
-                toggleClassName(document.querySelectorAll('.editorPlate .'+useElStore.els[useElStore.elsIdx[0]][0].class)[useElStore.elsIdx[1]], 'animation4');
-                console.log(4);
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation4/) == null) {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation4';
+                } else {
+                    let reg = new RegExp(/ animation4/);
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                }
                 break;
             case '左右移动':
-                toggleClassName(document.querySelectorAll('.editorPlate .'+useElStore.els[useElStore.elsIdx[0]][0].class)[useElStore.elsIdx[1]], 'animation5');
-                console.log(5);
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation5/) == null) {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation5';
+                } else {
+                    let reg = new RegExp(/ animation5/);
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                }
                 break;
         }
+        }
+        // 取消动画
+        const cancleAnimation = () => {
+            let reg1 = new RegExp(/ animation1/);
+            let reg2 = new RegExp(/ animation2/);
+            let reg3 = new RegExp(/ animation3/);
+            let reg4 = new RegExp(/ animation4/);
+            let reg5 = new RegExp(/ animation5/);
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg1, '');
+
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg2, '');
+
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg3, '');
+
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg4, '');
+
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg5, '');
     }
     return {
         list,
-      clickAnimation
+        clickAnimation,
+        cancleAnimation
     }
   }
 }
@@ -70,29 +104,12 @@ export default {
             margin-right: 20px;
         }
     }
-    // .ani{
-    //   width: 120px;
-    //   height: 50px;
-    //   line-height: 50px;
-    //   box-sizing: border-box;
-    //   border: 1px solid #000;
-    //   margin: 0 auto;
-    //   margin-bottom: 40px;
-    //   margin-top: 40px;
-    //   letter-spacing: 2px;
-    //   border-radius: 10px;
-    //   .itemP{
-    //     display: inline-block;
-    //     width: 120px;
-    //     text-align: center;
-    //     font-size: 16px;
-    //   }
-    // }
     .anift{
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
         flex-direction:row;
+        font-size: 16px;
         .ani{
             width: 120px;
             height: 50px;
@@ -105,103 +122,17 @@ export default {
             color: aliceblue;
             cursor: pointer;
         }
+        .cancleAni{
+            position: absolute;
+            bottom: 20px;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: rgb(232, 58, 58);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
     }
-    /* 放大 */
-        
-        .animation1 {
-            animation: animation1 1s ease-in-out infinite;
-        }
-        /* 缩小 */
-        
-        .animation2 {
-            animation: animation2 1s ease-in-out infinite;
-        }
-        /* 左右摆动 */
-        
-        .animation3 {
-            animation: animation3 1s ease-in-out infinite;
-        }
-        /* 上下移动 */
-        
-        .animation4 {
-            animation: animation4 1s ease infinite;
-        }
-        /* 左右移动 */
-        
-        .animation5 {
-            animation: animation5 1s ease infinite;
-        }
-        /* 不断放大 */
-        
-        @keyframes animation1 {
-            0% {}
-            50% {
-                transform: scale(1.5);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        /* 不断缩小 */
-        
-        @keyframes animation2 {
-            0% {}
-            50% {
-                transform: scale(0.5);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        /* 左右摆动 */
-        
-        @keyframes animation3 {
-            0% {}
-            25% {
-                transform: rotate(25deg);
-            }
-            50% {
-                transform: rotate(0deg);
-            }
-            75% {
-                transform: rotate(-25deg);
-            }
-            100% {
-                transform: rotate(0deg);
-            }
-        }
-        /* 上下移动 */
-        
-        @keyframes animation4 {
-            0% {}
-            25% {
-                transform: translateY(20px);
-            }
-            50% {
-                transform: translateY(0px);
-            }
-            75% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
-        }
-        /* 左右移动 */
-        
-        @keyframes animation5 {
-            0% {}
-            25% {
-                transform: translateX(20px);
-            }
-            50% {
-                transform: translateX(0px);
-            }
-            75% {
-                transform: translateX(-20px);
-            }
-            100% {
-                transform: translateX(0px);
-            }
-        }
 </style>

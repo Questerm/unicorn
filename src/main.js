@@ -7,6 +7,7 @@ import BoxAtrr from './components/childComponents/Box/Attribute.vue'
 import 'ant-design-vue/dist/antd.css';
 import Animation from './components/Animation.vue'
 import { usePersist } from 'pinia-use-persist'
+import '../public/css/animation.css'
 
 //数据持久化
 const pinia = createPinia()
