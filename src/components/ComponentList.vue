@@ -85,6 +85,7 @@ export default {
 			//创建盒子
 			{
 				class: 'box',
+				animation:'',
 				style: {
 					width: 200,
 					height: 200,
@@ -102,6 +103,7 @@ export default {
 			// 创建文字
 			{
 				class: 'text',
+				animation:'',
 				isEditable: false, //是否处于编辑状态
 				content: '双击可编辑文字',
 				style: {
@@ -128,6 +130,7 @@ export default {
 			//创建图片
 			{
 				class: 'img',
+				animation:'',
 				url: '',
 				style: {
 					width: 200,
@@ -145,6 +148,7 @@ export default {
 			//创建按钮
 			{
 				class: 'button',
+				animation:'',
 				style: {
 					width: 100,
 					height: 50,
@@ -174,6 +178,7 @@ export default {
 			//创建表单
 			{
 				class: 'input',
+				animation:'',
 				content: '', //内容
 				style: {
 					width: 300,

@@ -29,63 +29,51 @@ export default {
         const clickAnimation = (title) => {
         switch (title){
             case '放大':
-                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation1/) == null) {
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation1';
+                // if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation1/) == null) {
+                //     useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation = 'animation1';
+                // } else {
+                //     let reg = new RegExp(/ animation1/);
+                //     useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                // }
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation == 'animation1') {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation=''
                 } else {
-                    let reg = new RegExp(/ animation1/);
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation='animation1'
                 }
                 break;
             case '缩小':
-                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation2/) == null) {
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation2';
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation == 'animation2') {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation=''
                 } else {
-                    let reg = new RegExp(/ animation2/);
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation='animation2'
                 }
                 break;
             case '抖动':
-                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation3/) == null) {
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation3';
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation == 'animation3') {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation=''
                 } else {
-                    let reg = new RegExp(/ animation3/);
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation='animation3'
                 }
                 break;
             case '上下移动':
-                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation4/) == null) {
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation4';
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation == 'animation4') {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation=''
                 } else {
-                    let reg = new RegExp(/ animation4/);
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation='animation4'
                 }
                 break;
             case '左右移动':
-                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.match(/animation5/) == null) {
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class += ' animation5';
+                if (useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation == 'animation5') {
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation=''
                 } else {
-                    let reg = new RegExp(/ animation5/);
-                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class=useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg, '');
+                    useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation='animation5'
                 }
                 break;
         }
         }
         // 取消动画
         const cancleAnimation = () => {
-            let reg1 = new RegExp(/ animation1/);
-            let reg2 = new RegExp(/ animation2/);
-            let reg3 = new RegExp(/ animation3/);
-            let reg4 = new RegExp(/ animation4/);
-            let reg5 = new RegExp(/ animation5/);
-            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg1, '');
-
-            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg2, '');
-
-            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg3, '');
-
-            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg4, '');
-
-            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class = useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].class.replace(reg5, '');
+            useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation = '';
     }
     return {
         list,

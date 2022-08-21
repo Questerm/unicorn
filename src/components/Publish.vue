@@ -5,7 +5,7 @@
 			<div
 				v-for="p of els[0]"
 				:key="p.id"
-				:class="p.class"
+				:class="`${p.class} ${p.animation}`"
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
@@ -14,7 +14,7 @@
 			<div
 				v-for="p of els[1]"
 				:key="p.id"
-				:class="p.class"
+				:class="`${p.class} ${p.animation}`"
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
@@ -26,7 +26,7 @@
 			<img
 				v-for="p of els[2]"
 				:key="p.id"
-				:class="p.class"
+				:class="`${p.class} ${p.animation}`"
 				:src="p.url"
 				:style="{
 					...styleFormat({ ...p.style }),
@@ -36,7 +36,7 @@
 			<button
 				v-for="p of els[3]"
 				:key="p.id"
-				:class="p.class"
+				:class="`${p.class} ${p.animation}`"
 				:style="{
 					...styleFormat({ ...p.style }, 'btn'),
 				}"
@@ -47,7 +47,7 @@
 			<input
 				v-for="p of els[4]"
 				:key="p.id"
-				:class="p.class"
+				:class="`${p.class} ${p.animation}`"
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"

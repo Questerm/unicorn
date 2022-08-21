@@ -11,7 +11,7 @@
 		<div
 			v-for="(p, index) of useElStore.els[0]"
 			:key="p.id"
-			:class="p.class"
+			:class="`${p.class} ${p.animation}`"
 			:style="{
 				...styleFormat({ ...p.style }),
 			}"
@@ -22,7 +22,7 @@
 		<div
 			v-for="(p, index) of useElStore.els[1]"
 			:key="p.id"
-			:class="p.class"
+			:class="`${p.class} ${p.animation}`"
 			:style="{
 				...styleFormat({ ...p.style }),
 			}"
@@ -37,7 +37,7 @@
 		<img
 			v-for="(p, index) of useElStore.els[2]"
 			:key="p.id"
-			:class="p.class"
+			:class="`${p.class} ${p.animation}`"
 			:src="p.url"
 			:style="{ ...styleFormat({ ...p.style }) }"
 			@mousedown.stop="move($event, p, [2, index])"
@@ -47,7 +47,7 @@
 		<button
 			v-for="(p, index) of useElStore.els[3]"
 			:key="p.id"
-			:class="p.class"
+			:class="`${p.class} ${p.animation}`"
 			:style="{
 				...styleFormat({ ...p.style }, 'btn'),
 			}"
@@ -62,7 +62,7 @@
 		<input
 			v-for="(p, index) of useElStore.els[4]"
 			:key="p.id"
-			:class="p.class"
+			:class="`${p.class} ${p.animation}`"
 			:style="{
 				...styleFormat({ ...p.style }),
 			}"
