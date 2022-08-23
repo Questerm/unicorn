@@ -55,7 +55,6 @@ export default {
 		}
 		const scrollHandle = (e) => {
 			useElStore.editorScroll = e.target.scrollLeft
-			console.log(e.target.scrollLeft)
 		}
 		const scroll = debounce(scrollHandle, 1000)
 
@@ -65,16 +64,14 @@ export default {
 		const productName = ref(route.params.productName)
 		provide('productName', productName)
 		const getSaveByName = async () => {
-			const { data } = await getRecentlySave(
+			await getRecentlySave(
 				uStore.username,
 				route.params.productName
 			)
-			console.log(data)
 		}
 
 		onMounted(() => {
 			getSaveByName();
-			console.log('初始化')
 			useSnapshot.snapshotIndex = -1;
 			useSnapshot.snapshotData = [];
 			useSnapshot.snapshotData[++useSnapshot.snapshotIndex] = deepCopy(
@@ -89,7 +86,7 @@ export default {
 		})
 
 		onBeforeUnmount(() => {
-			useElStore.updataEls(Array.from(new Array(5), () => []))
+			useElStore.updataEls(Array.from(new Array(6), () => []))
 		})
 
 		return { scroll }

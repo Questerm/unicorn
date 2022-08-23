@@ -7,7 +7,7 @@ export default (els, elsIdx, idx) => {
     const elR = el.style.left + el.style.width;
     let arr = [];
     //找到与当前选中的元素部分重叠的元素 保存在数组中
-    for (let i = 0; i < els.length; i++) {
+    for (let i = 0; i < 5; i++) {
         for (let j = 0; j < els[i].length; j++) {
             if (!(elsIdx[0] == i && elsIdx[1] == j)) {
                 let tL = els[i][j].style.left;

@@ -52,14 +52,14 @@ import {
 	VideoCameraOutlined,
 	ProjectOutlined,
 	UserOutlined,
-	DownOutlined 
+	DownOutlined
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { computed } from '@vue/runtime-core'
 import userStore from '@/store/userStore'
 
 export default {
-	components: { VideoCameraOutlined, ProjectOutlined, UserOutlined, DownOutlined  },
+	components: { VideoCameraOutlined, ProjectOutlined, UserOutlined, DownOutlined },
 	setup() {
 		//路由
 		const router = useRouter()

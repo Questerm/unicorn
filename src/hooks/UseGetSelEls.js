@@ -46,8 +46,8 @@ export default (e, f, els, sty) => {
             for (let i = 0; i < dels.length; i++)
                 dels[i].style.opacity = 1;
             dels = [];
-            let elDomAll = new Array(els.length);
-            for (let i = 0; i < els.length; i++) {
+            let elDomAll = new Array(5);
+            for (let i = 0; i < 5; i++) {
                 if (els[i][0])
                     elDomAll[i] = [...document.querySelectorAll('.' + els[i][0].class)];
                 else

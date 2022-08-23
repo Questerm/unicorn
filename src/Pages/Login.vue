@@ -74,10 +74,9 @@ export default {
 		//登录成功
 		const uStore = userStore()
 		const onFinish = async (values) => {
-			const data = await login(values)
+			await login(values)
 			uStore.username = values.username
 			router.push('/userPage')
-			console.log(data)
 		}
 
 		//是否禁用

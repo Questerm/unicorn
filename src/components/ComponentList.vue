@@ -41,7 +41,7 @@ export default {
 		]
 		let useElStore = elStore()
 		let useSnapshot = snapshot()
-		let els = reactive(Array.from(new Array(list.length), () => []))
+		let els = reactive(Array.from(new Array(list.length+1), () => []))
 		// useElStore.els = els
 		const newSomething = (id) => {
 			if (JSON.parse(JSON.stringify(useElStore.els) === '{}')) {

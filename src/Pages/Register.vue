@@ -72,7 +72,6 @@ export default {
 		const router = useRouter()
 		const onFinish = async (values) => {
 			const data = await register(values)
-			console.log(data)
 			if (data.status == 1) {
 				router.push('/login')
 			} else if (data.status == 0) {

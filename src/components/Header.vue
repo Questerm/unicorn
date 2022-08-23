@@ -64,6 +64,7 @@ import elStore from '@/store/elStore'
 import { saveTemplate } from '@/api'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
+import html2canvas from 'html2canvas'
 
 export default defineComponent({
 	name: 'Header',
@@ -105,22 +106,49 @@ export default defineComponent({
 		const saveData = reactive({
 			username: '',
 			content: {},
-			productName: '',
+      productName: '',
+      cover: '',
 		})
 		const save = () => {
 			saveVisible.value = true
 		}
 
-		const addOk = async () => {
-			saveData.username = uStore.username
-			saveData.content = JSON.stringify(els.value)
-			console.log(els.value)
-			saveData.productName = projectName.value
-			const data = await saveTemplate(saveData)
-			console.log(data)
-			saveVisible.value = false
-			message.info('保存成功')
-		}
+    const addOk = () => {
+      const editorPlate = document.querySelector(".editorPlate");
+      saveData.username = uStore.username;
+      console.log(els.value);
+      els.value[5][0]=editorPlate.offsetWidth;
+      els.value[5][1]=editorPlate.offsetHeight;
+      saveData.content = JSON.stringify(els.value);
+      saveData.productName = projectName.value;
+      saveVisible.value = false;
+      createPreimg(editorPlate);
+    };
+
+    //生成预览图
+    function createPreimg(editorPlate) {
+      new Promise((resolve) => {
+        //生成mousedown的事件对象
+        const mouseEvent = new MouseEvent("mousedown");
+        //触发editorPlate的mousedown事件 为了让截图里面没有矩形选择框
+        editorPlate.dispatchEvent(mouseEvent);
+        resolve();
+        //截屏
+      }).then(() => {
+        html2canvas(editorPlate, {
+          scale: 4,
+          useCORS: true,
+          async: false,
+          background: "transparent",
+          dip: window.devicePixelRatio * 4, //处理模糊问题
+        }).then((canvas) => {
+          let imgUrl = canvas.toDataURL("image/jpeg");
+          saveData.cover = imgUrl;
+          saveTemplate(saveData);
+          message.info("保存成功");
+        });
+      });
+    }
 
 		//发布
 		const pubVisible = ref(false)

@@ -51,9 +51,9 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
-				:type="p.type"
+				:type="p.other.type"
 				v-model="p.content"
-				:placeholder="p.tip"
+				:placeholder="p.other.tip"
 			/>
 		</div>
 	</div>
@@ -61,15 +61,11 @@
 
 <script>
 import { onMounted, reactive } from 'vue'
-import { useRoute } from 'vue-router'
 import elStore from '@/store/elStore'
 import { storeToRefs } from 'pinia'
 
 export default {
 	setup() {
-		//路由
-		const route = useRoute()
-
 		//pinia数据
 		const useElStore = elStore()
 		let { els } = storeToRefs(useElStore)
@@ -99,7 +95,6 @@ export default {
 
 		onMounted(() => {
 			Style.width = document.body.clientWidth + 'px'
-			console.log(route.params)
 		})
 
 		return { els, Style, styleFormat }
