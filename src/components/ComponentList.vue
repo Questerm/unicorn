@@ -22,7 +22,6 @@ import elStore from '@/store/elStore'
 import { reactive } from '@vue/reactivity'
 import { onMounted } from 'vue'
 import snapshot from '@/store/snapshot'
-import { deepCopy } from '@/hooks/deepCopy'
 
 export default {
 	name: 'ComponentList',
@@ -30,9 +29,6 @@ export default {
 		let imgInput
 		onMounted(() => {
 			imgInput = document.getElementsByClassName('imgInput')[0]
-			useSnapshot.snapshotData[++useSnapshot.snapshotIndex] = deepCopy(
-				useElStore.els
-			)
 		})
 
 		//组件列表

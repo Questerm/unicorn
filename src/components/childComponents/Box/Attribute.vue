@@ -186,6 +186,7 @@
 <script>
 import { defineComponent, reactive, ref, watch, nextTick } from 'vue'
 import elStore from '@/store/elStore'
+import snapshot from '@/store/snapshot'
 import { v4 as uuidv4 } from 'uuid'
 // import { storeToRefs } from 'pinia'
 
@@ -196,6 +197,7 @@ export default defineComponent({
 		const checked1 = ref(false)
 		const fileList = reactive([])
 		const useElStore = elStore()
+		const useSnapshot = snapshot()
 		// let { elsIdx, els, rectStyle } = storeToRefs(useElStore)
 		const els = useElStore.els
 		const elsIdx = useElStore.elsIdx
@@ -247,10 +249,20 @@ export default defineComponent({
 		})
 		let elClass = ref('')
 
+		//监听isSnapshot值的变化，给el重新赋值
+		watch(() => useSnapshot.isSnapshot, () => {
+			if (elsIdx[0] !== -1 && elsIdx[1] !== -1 && !JSON.parse(JSON.stringify(useElStore.els) === '{}') && !(useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]] === undefined)) {
+				el.style = useElStore.els[elsIdx[0]][elsIdx[1]].style;
+				// useElStore.rectStyle.height = el.target.offsetHeight
+			}
+			rectStyle.style = el.style
+			useSnapshot.isSnapshot = false;
+		})
+
 		//监听elsIdx改变 改变更换el值
 		watch(elsIdx, () => {
 			if (elsIdx[0] != -1 || elsIdx[0] == 0) {
-				let t = els[elsIdx[0]][elsIdx[1]]
+				let t = useElStore.els[elsIdx[0]][elsIdx[1]]
 				el.style = t.style
 				elClass.value = t.class
 				if (elClass.value == 'input' || elClass.value == 'button') {

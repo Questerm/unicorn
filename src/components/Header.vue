@@ -2,6 +2,7 @@
 	<header class="nav">
 		<a href="#" class="hd-logo">
 			<img src="../assets/logo.png" alt="logo" />
+			<div class="headName">Unicorn</div>
 		</a>
 		<div class="hd-btns">
 			<a-button class="btn" @click="save">保存</a-button>
@@ -175,13 +176,16 @@ export default defineComponent({
 	justify-content: space-between;
 	align-items: center;
 	.hd-logo {
-		display: block;
-		width: 100px;
-		height: 30px;
-		background-color: aquamarine;
+		display: flex;
 		img {
-			width: 100%;
-			height: 100%;
+			margin: 0 8px;
+			height: 40px;
+		}
+		.headName {
+			font-size: 30px;
+			line-height: 40px;
+			font-family: Book Antiqua;
+			color: rgb(255, 255, 255);
 		}
 	}
 	.hd-btns {

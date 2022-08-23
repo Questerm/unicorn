@@ -65,7 +65,11 @@ export default {
 		//撤回方法
 		function undo(rectValue) {
 			useSnapshot.undo()
-			if (useElStore.rectIsShow) {
+			if (!(JSON.parse(JSON.stringify(useElStore.els) === '{}')) && elsIdx[0] !== -1 && elsIdx[1] !== -1 && !(useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]] === undefined)) {
+				useElStore.rectStyle.style = useElStore.els[elsIdx[0]][elsIdx[1]].style;
+			}
+			useSnapshot.isSnapshot = true;
+			if (useElStore.rectIsShow && elsIdx[0] !== -1 && elsIdx[1] !== -1) {
 				rectSynchronous(rectValue)
 			}
 		}
@@ -73,7 +77,7 @@ export default {
 		//使矩形选择框同步到元素当前的位置
 		function rectSynchronous(rectValue) {
 			if (
-				useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]] === undefined
+				JSON.parse(JSON.stringify(useElStore.els) === '{}') || useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]] === undefined
 			) {
 				useElStore.rectIsShow = false
 			} else {
@@ -97,59 +101,54 @@ export default {
 		//恢复方法
 		function redo(rectValue) {
 			useSnapshot.redo()
-			if (useElStore.rectIsShow) {
+			// useElStore.rectIsShow = true;
+			// if (elsIdx[0] !== -1 && elsIdx[1] !== -1 ) {
+			// 	useElStore.rectStyle.style = useElStore.els[elsIdx[0]][elsIdx[1]].style;
+			// }
+			useSnapshot.isSnapshot = true;
+			if (useElStore.rectIsShow && elsIdx[0] !== -1 && elsIdx[1] !== -1) {
 				rectSynchronous(rectValue)
 			}
 		}
 
-		// useelStore.els = els;
-		//居左对齐
+		 //居左对齐  
 		function alignLeft(elsIdx, rectValue) {
-			if (useElStore.rectIsShow) {
-				console.log(useElStore.els[elsIdx[0]][elsIdx[1]].style)
-				useElStore.els[elsIdx[0]][elsIdx[1]].style.left = 0
-				rectSynchronous(rectValue)
-				//居左对齐时，添加新的快照
-				useSnapshot.recordSnapshot()
-			}
+		if (useElStore.rectIsShow) {
+			useElStore.els[elsIdx[0]][elsIdx[1]].style.left = useElStore.editorScroll;
+			rectSynchronous(rectValue); 
+			//居左对齐时，添加新的快照
+			useSnapshot.recordSnapshot();
+		}
 		}
 
 		//居中对齐
 		function alignCenter(elsIdx, rectValue) {
-			if (useElStore.rectIsShow) {
-				console.log(useElStore.els[elsIdx[0]][elsIdx[1]].style)
-				els[elsIdx[0]][elsIdx[1]].style.left =
-					876 / 2 - els[elsIdx[0]][elsIdx[1]].style.width / 2
-				useElStore.els = els
-				rectSynchronous(rectValue)
-				//居中对齐时，添加新的快照
-				useSnapshot.recordSnapshot()
-			}
+		if (useElStore.rectIsShow) {
+			useElStore.els[elsIdx[0]][elsIdx[1]].style.left = 876 / 2 - useElStore.els[elsIdx[0]][elsIdx[1]].style.width / 2 + useElStore.editorScroll;
+			rectSynchronous(rectValue); 
+			//居中对齐时，添加新的快照
+			useSnapshot.recordSnapshot();
+		}
 		}
 
-		//居右对齐
+    	//居右对齐
 		function alignRight(elsIdx, rectValue) {
-			if (useElStore.rectIsShow) {
-				console.log(useElStore.els[elsIdx[0]][elsIdx[1]].style)
-				els[elsIdx[0]][elsIdx[1]].style.left =
-					876 - els[elsIdx[0]][elsIdx[1]].style.width
-				useElStore.els = els
-				rectSynchronous(rectValue)
-				//居右对齐时，添加新的快照
-				useSnapshot.recordSnapshot()
-			}
+		if (useElStore.rectIsShow) {
+			useElStore.els[elsIdx[0]][elsIdx[1]].style.left = 876 - useElStore.els[elsIdx[0]][elsIdx[1]].style.width + useElStore.editorScroll - 9;
+			rectSynchronous(rectValue); 
+			//居右对齐时，添加新的快照
+			useSnapshot.recordSnapshot();
+		}
 		}
 
 		//两端对齐
 		function alignFullJustified(elsIdx, rectValue) {
-			if (useElStore.rectIsShow) {
-				console.log(useElStore.els[elsIdx[0]][elsIdx[1]].style)
-				els[elsIdx[0]][elsIdx[1]].style.left = 0
-				useElStore.els = els
-				rectSynchronous(rectValue)
-				//两端对齐时，添加新的快照
-				useSnapshot.recordSnapshot()
-			}
+		if (useElStore.rectIsShow) { 
+			useElStore.els[elsIdx[0]][elsIdx[1]].style.left = useElStore.editorScroll;
+			rectSynchronous(rectValue); 
+			//两端对齐时，添加新的快照
+			useSnapshot.recordSnapshot();
+		}
 		}
 
 		return {

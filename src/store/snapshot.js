@@ -8,7 +8,7 @@ export default defineStore('snapshot', {
         return {
             snapshotData: [], //保存快照的数组
             snapshotIndex: -1, //快照数组的索引
-            isSnapshot: false
+            isSnapshot: false,
         }
     },
     getters: {},
@@ -16,19 +16,13 @@ export default defineStore('snapshot', {
         //利用快照数组更新画布中的数据
         //改变画布数据
         elsChange(snapshotData) {
-            console.log('画布数据改变前的els:', elStore().els)
             elStore().els = snapshotData;
-            console.log('画布数据改变后的els:', elStore().els)
         },
 
         //撤回操作
         undo() {
-            if (this.snapshotIndex >= 0) {
+            if (this.snapshotIndex > 0) {
                 this.snapshotIndex--;
-                console.log('---撤回操作---')
-                console.log('撤回时的snaphotData数组：', this.snapshotData)
-                console.log('撤回时选取的对应数组数据：', this.snapshotData[this.snapshotIndex])
-                console.log('撤回时对应的索引：', this.snapshotIndex)
                 const data = deepCopy(this.snapshotData[this.snapshotIndex]) || [];
                 this.elsChange(data);
             }

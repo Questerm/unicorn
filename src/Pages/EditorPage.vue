@@ -34,6 +34,8 @@ import { onBeforeUnmount, onMounted, provide, ref } from '@vue/runtime-core'
 import { useRoute } from 'vue-router'
 import { getRecentlySave } from '@/api'
 import userStore from '@/store/userStore'
+import snapshot from '@/store/snapshot'
+import { deepCopy } from '@/hooks/deepCopy'
 // import { storeToRefs } from 'pinia'
 
 export default {
@@ -41,7 +43,7 @@ export default {
 	components: { Header, ComponentList, Operation, Setting, EditorPlate },
 	setup() {
 		const route = useRoute()
-
+		const useSnapshot = snapshot()
 		// 防抖
 		function debounce(fn, wait) {
 			let timeoutID = null
@@ -71,7 +73,19 @@ export default {
 		}
 
 		onMounted(() => {
-			getSaveByName()
+			getSaveByName();
+			console.log('初始化')
+			useSnapshot.snapshotIndex = -1;
+			useSnapshot.snapshotData = [];
+			useSnapshot.snapshotData[++useSnapshot.snapshotIndex] = deepCopy(
+				useElStore.els
+			)
+			// useSnapshot.snapshotData[++useSnapshot.snapshotIndex] = deepCopy(
+			// 	useElStore.els
+			// )
+			useElStore.elsIdx[0] = -1;
+			useElStore.elsIdx[1] = -1;
+			useElStore.editorScroll = 0;
 		})
 
 		onBeforeUnmount(() => {
@@ -89,9 +103,10 @@ export default {
 	padding: 0;
 }
 .container {
-	height: 753px;
+	width: 100%;
+	height: 100%;
 	background-color: #eeecf0;
-	background-size: cover;
+	// background-size: cover;
 }
 .main {
 	display: flex;
@@ -99,17 +114,21 @@ export default {
 	padding: 0 15px;
 	overflow: hidden;
 	.left {
-		position: fixed;
-		top: 0px;
-		left: 15px;
+		// position: fixed;
+		// top: 0px;
+		// left: 15px;
 		margin-top: 65px;
+		padding-left: 0;
 		width: 290px;
 		height: 673px;
 		background-color: #fff;
 		border-radius: 6px;
 		overflow: hidden;
+
 	}
 	.middle {
+		// flex:1;
+		margin: 0 20px;
 		margin-top: 65px;
 		width: 876px;
 		height: 673px;
@@ -119,13 +138,28 @@ export default {
 			width: 100%;
 			height: calc(100% - 61px);
 			overflow-y: scroll;
+			&::-webkit-scrollbar {
+				width: 10px;
+				height: 10px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: #c5c8c7;
+				border-radius: 32px;
+			}
+			
+			&::-webkit-scrollbar-track {
+				background-color: #f3f3f3;
+				border-radius: 32px;
+			}	
 		}
 	}
 	.right {
-		position: fixed;
-		top: 0px;
-		right: 15px;
+		// position: fixed;
+		// top: 0px;
+		// right: 15px;
 		margin-top: 65px;
+		padding-right: 0;
 		padding-bottom: 30px;
 		width: 290px;
 		height: 673px;
@@ -133,6 +167,20 @@ export default {
 		border-radius: 6px;
 		overflow: hidden;
 		overflow-y: auto;
+		&::-webkit-scrollbar {
+				width: 10px;
+				height: 10px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: #c5c8c7;
+				border-radius: 32px;
+			}
+			
+			&::-webkit-scrollbar-track {
+				background-color: #f3f3f3;
+				border-radius: 32px;
+			}	
 	}
 }
 </style>

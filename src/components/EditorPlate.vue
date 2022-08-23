@@ -79,11 +79,11 @@
 			@mousedown.stop="changeSize"
 			v-show="rectIsShow"
 			:style="{
-				width: rectStyle.style.width + 'px',
-				height: rectStyle.height + 'px',
-				top: rectStyle.style.top + 'px',
-				left: rectStyle.style.left + 'px',
-				transform: `rotate(${rectStyle.style.rotate}deg)`,
+				width: useElStore.rectStyle.style.width + 'px',
+				height: useElStore.rectStyle.height + 'px',
+				top: useElStore.rectStyle.style.top + 'px',
+				left: useElStore.rectStyle.style.left + 'px',
+				transform: `rotate(${useElStore.rectStyle.style.rotate}deg)`,
 			}"
 		>
 			<span class="l"></span>
@@ -220,7 +220,7 @@ export default {
 				e,
 				useElStore.els[elsIdx[0]][elsIdx[1]],
 				editorPlate.value,
-				rectStyle,
+				useElStore.rectStyle,
 				elsIdx[1]
 			)
 		}
@@ -263,8 +263,8 @@ export default {
 			if (elsIdx[0] != idx[0] || elsIdx[1] != idx[1]) {
 				elsIdx[0] = idx[0]
 				elsIdx[1] = idx[1]
-				rectStyle.style = p.style
-				rectStyle.height = e.target.offsetHeight
+				useElStore.rectStyle.style = p.style
+				useElStore.rectStyle.height = e.target.offsetHeight
 				if (useElStore.els[elsIdx[0]][0].class == 'text')
 					useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
 				num = 0
@@ -294,7 +294,7 @@ export default {
 		function changeText(e, p) {
 			e.preventDefault()
 			p.content = e.target.innerText
-			rectStyle.height = e.target.offsetHeight
+			useElStore.rectStyle.height = e.target.offsetHeight
 		}
 
 		//旋转
@@ -308,8 +308,11 @@ export default {
 		function changeRectShow(e) {
 			e.preventDefault()
 			num = 0
-			if (elsIdx[0] != -1 && useElStore.els[elsIdx[0]][0].class == 'text')
-				useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
+			if (elsIdx[0] != -1) {
+				if (useElStore.els[elsIdx[0]][0].class == 'text') {
+					useElStore.els[elsIdx[0]][elsIdx[1]].isEditable = false
+				}
+			}
 			rectIsShow.value = false
 			elsIdx[0] = -1
 			elsIdx[1] = -1
@@ -370,7 +373,7 @@ export default {
 			let eClass = e.target.className == ''
 			if (index == 0 && eClass) {
 				//复制
-				copyEl = els[elsIdx[0]][elsIdx[1]]
+				copyEl = useElStore.els[elsIdx[0]][elsIdx[1]]
 				copyElIdx[0] = elsIdx[0]
 				copyElIdx[1] = elsIdx[1]
 			} else if (index == 1 && copyEl) {
@@ -379,24 +382,30 @@ export default {
 				tObj.id = uuidv4()
 				tObj.style.left = xMeum
 				tObj.style.top = yMeum
-				els[copyElIdx[0]].push(tObj)
+				useElStore.els[copyElIdx[0]].push(tObj)
+				// 粘贴之后生成快照
+				useSnapshot.recordSnapshot()
 			} else if (index == 2 && eClass) {
 				//剪切
-				copyEl = els[elsIdx[0]][elsIdx[1]]
+				copyEl = useElStore.els[elsIdx[0]][elsIdx[1]]
 				copyElIdx[0] = elsIdx[0]
 				copyElIdx[1] = elsIdx[1]
-				els[elsIdx[0]].splice(elsIdx[1], 1)
+				useElStore.els[elsIdx[0]].splice(elsIdx[1], 1)
 				elsIdx[0] = -1
 				elsIdx[1] = -1
 				rectIsShow.value = false
+				// 剪切之后生成快照
+				useSnapshot.recordSnapshot()
 			} else if (index == 3 && eClass) {
 				//删除
-				els[elsIdx[0]].splice(elsIdx[1], 1)
+				useElStore.els[elsIdx[0]].splice(elsIdx[1], 1)
 				elsIdx[0] = -1
 				elsIdx[1] = -1
 				rectIsShow.value = false
+				// 删除之后生成快照
+				useSnapshot.recordSnapshot()
 			} else {
-				UseChangeZIndex(els, elsIdx, index)
+				UseChangeZIndex(useElStore.els, elsIdx, index)
 			}
 			handleBox.value.style.display = 'none'
 		}
@@ -428,7 +437,7 @@ export default {
 		return {
 			editorPlate,
 			rectIsShow,
-			rectStyle,
+			// rectStyle,
 			rect,
 			move,
 			els,

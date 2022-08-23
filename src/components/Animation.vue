@@ -70,10 +70,14 @@ export default {
                 }
                 break;
         }
+        // 添加动画后，添加快照
+        useSnapshot.recordSnapshot()
         }
         // 取消动画
         const cancleAnimation = () => {
             useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].animation = '';
+            // 取消动画后，添加快照
+            useSnapshot.recordSnapshot()
     }
     return {
         list,

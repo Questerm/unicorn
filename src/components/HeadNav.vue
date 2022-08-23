@@ -1,6 +1,7 @@
 <template>
 	<div class="headNav">
 		<div class="headLeft">
+			<img src="../assets/logo.png" alt="logo" />
 			<div class="headName">Unicorn</div>
 			<div class="navItem" @click="toGuide">
 				<video-camera-outlined
@@ -51,13 +52,14 @@ import {
 	VideoCameraOutlined,
 	ProjectOutlined,
 	UserOutlined,
+	DownOutlined 
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { computed } from '@vue/runtime-core'
 import userStore from '@/store/userStore'
 
 export default {
-	components: { VideoCameraOutlined, ProjectOutlined, UserOutlined },
+	components: { VideoCameraOutlined, ProjectOutlined, UserOutlined, DownOutlined  },
 	setup() {
 		//路由
 		const router = useRouter()
@@ -106,6 +108,10 @@ export default {
 			font-family: Book Antiqua;
 			color: rgb(127, 180, 209);
 			margin-right: 80px;
+		}
+		img {
+			margin: 0 8px;
+			height: 40px;
 		}
 		.navItem {
 			margin-left: 80px;
