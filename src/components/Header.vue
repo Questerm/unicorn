@@ -12,7 +12,11 @@
 				@ok="addOk"
 				@cancel="saveVisible = false"
 			>
-				<a-input v-model:value="projectName" placeholder="请输入项目名称" />
+				<a-input
+					v-if="productName !== ''"
+					v-model:value="projectName"
+					placeholder="请输入项目名称"
+				/>
 			</a-modal>
 			<a-button class="btn" @click="preview">预览</a-button>
 			<a-modal
@@ -56,7 +60,14 @@
 </template>
 
 <script>
-import { computed, defineComponent, inject, reactive, ref } from 'vue'
+import {
+	computed,
+	defineComponent,
+	inject,
+	onMounted,
+	reactive,
+	ref,
+} from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import userStore from '@/store/userStore'
@@ -74,6 +85,7 @@ export default defineComponent({
 	setup() {
 		//路由
 		const router = useRouter()
+		let productName = ref('')
 
 		const uStore = userStore()
 		const useElStore = elStore()
@@ -106,49 +118,49 @@ export default defineComponent({
 		const saveData = reactive({
 			username: '',
 			content: {},
-      productName: '',
-      cover: '',
+			productName: '',
+			cover: '',
 		})
 		const save = () => {
 			saveVisible.value = true
 		}
 
-    const addOk = () => {
-      const editorPlate = document.querySelector(".editorPlate");
-      saveData.username = uStore.username;
-      console.log(els.value);
-      els.value[5][0]=editorPlate.offsetWidth;
-      els.value[5][1]=editorPlate.offsetHeight;
-      saveData.content = JSON.stringify(els.value);
-      saveData.productName = projectName.value;
-      saveVisible.value = false;
-      createPreimg(editorPlate);
-    };
+		const addOk = () => {
+			const editorPlate = document.querySelector('.editorPlate')
+			saveData.username = uStore.username
+			console.log(els.value)
+			els.value[5][0] = editorPlate.offsetWidth
+			els.value[5][1] = editorPlate.offsetHeight
+			saveData.content = JSON.stringify(els.value)
+			saveData.productName = projectName.value
+			saveVisible.value = false
+			createPreimg(editorPlate)
+		}
 
-    //生成预览图
-    function createPreimg(editorPlate) {
-      new Promise((resolve) => {
-        //生成mousedown的事件对象
-        const mouseEvent = new MouseEvent("mousedown");
-        //触发editorPlate的mousedown事件 为了让截图里面没有矩形选择框
-        editorPlate.dispatchEvent(mouseEvent);
-        resolve();
-        //截屏
-      }).then(() => {
-        html2canvas(editorPlate, {
-          scale: 4,
-          useCORS: true,
-          async: false,
-          background: "transparent",
-          dip: window.devicePixelRatio * 4, //处理模糊问题
-        }).then((canvas) => {
-          let imgUrl = canvas.toDataURL("image/jpeg");
-          saveData.cover = imgUrl;
-          saveTemplate(saveData);
-          message.info("保存成功");
-        });
-      });
-    }
+		//生成预览图
+		function createPreimg(editorPlate) {
+			new Promise((resolve) => {
+				//生成mousedown的事件对象
+				const mouseEvent = new MouseEvent('mousedown')
+				//触发editorPlate的mousedown事件 为了让截图里面没有矩形选择框
+				editorPlate.dispatchEvent(mouseEvent)
+				resolve()
+				//截屏
+			}).then(() => {
+				html2canvas(editorPlate, {
+					scale: 4,
+					useCORS: true,
+					async: false,
+					background: 'transparent',
+					dip: window.devicePixelRatio * 4, //处理模糊问题
+				}).then((canvas) => {
+					let imgUrl = canvas.toDataURL('image/jpeg')
+					saveData.cover = imgUrl
+					saveTemplate(saveData)
+					message.info('保存成功')
+				})
+			})
+		}
 
 		//发布
 		const pubVisible = ref(false)
@@ -171,6 +183,11 @@ export default defineComponent({
 			document.execCommand('copy')
 		}
 
+		onMounted(() => {
+			productName = inject('productName')
+			console.log(productName)
+		})
+
 		return {
 			preview,
 			addOk,
@@ -180,6 +197,7 @@ export default defineComponent({
 			projectName,
 			saveVisible,
 			username,
+			productName,
 			handleOk,
 			publish,
 			pubVisible,

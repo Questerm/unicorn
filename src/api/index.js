@@ -34,3 +34,9 @@ export const deleteTemplate = (parmas) => requires({
     data: parmas,
     url: '/deleteTemplate'
 })
+
+//修改项目名
+export const updateInfo = (username, productName, newName) => requires({
+    url: `/updateInfo?username=${username}&productName=${productName}&newName=${newName}`,
+    method: 'GET'
+})
