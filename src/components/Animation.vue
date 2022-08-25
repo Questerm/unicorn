@@ -13,11 +13,13 @@
 
 <script>
 import elStore from '@/store/elStore.js';
+import snapshot from '@/store/snapshot';
 
 export default {
   name: 'Animation',
     setup() { 
         let useElStore = elStore();
+        const useSnapshot = snapshot();
     // 动画列表
     const list = [
       {id:1,title:'放大'},

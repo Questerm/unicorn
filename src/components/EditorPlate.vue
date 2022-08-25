@@ -280,7 +280,22 @@ export default {
 			useElStore.rectValue = rect.value
 			//将数据rect.rectIsShow发送给Operation插件
 			useElStore.rectIsShow = rectIsShow
+      // 判断是否添加了事件
+      judge();
 		}
+
+     // 判断是否添加了事件
+     function judge() {
+        if(elsIdx[0] === -1 || elsIdx[1] === -1) {
+            useElStore.judgeIsShow = false
+            return;
+        }
+        if(useElStore.els[useElStore.elsIdx[0]][useElStore.elsIdx[1]].link === '') {
+            useElStore.judgeIsShow = false
+        } else {
+            useElStore.judgeIsShow = true;
+        }
+      }
 
 		//改变文本时也改变内容 改变矩形选择框高度
 		function changeText(e, p) {
@@ -312,6 +327,8 @@ export default {
 					dels = x
 				}
 			)
+      // 判断是否添加了事件
+      judge();
 		}
 
     //样式格式化

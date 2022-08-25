@@ -101,10 +101,6 @@ export default {
 		//恢复方法
 		function redo(rectValue) {
 			useSnapshot.redo()
-			// useElStore.rectIsShow = true;
-			// if (elsIdx[0] !== -1 && elsIdx[1] !== -1 ) {
-			// 	useElStore.rectStyle.style = useElStore.els[elsIdx[0]][elsIdx[1]].style;
-			// }
 			useSnapshot.isSnapshot = true;
 			if (useElStore.rectIsShow && elsIdx[0] !== -1 && elsIdx[1] !== -1) {
 				rectSynchronous(rectValue)

@@ -42,7 +42,6 @@ export default {
 		let useElStore = elStore()
 		let useSnapshot = snapshot()
 		let els = reactive(Array.from(new Array(list.length+1), () => []))
-		// useElStore.els = els
 		const newSomething = (id) => {
 			if (JSON.parse(JSON.stringify(useElStore.els) === '{}')) {
 				els = reactive(Array.from(new Array(list.length), () => []))
@@ -81,7 +80,8 @@ export default {
 			//创建盒子
 			{
 				class: 'box',
-				animation:'',
+				animation: '',
+				link: '',
 				style: {
 					width: 200,
 					height: 200,
@@ -100,6 +100,7 @@ export default {
 			{
 				class: 'text',
 				animation:'',
+				link: '',
 				isEditable: false, //是否处于编辑状态
 				content: '双击可编辑文字',
 				style: {
@@ -127,6 +128,7 @@ export default {
 			{
 				class: 'img',
 				animation:'',
+				link: '',
 				url: '',
 				style: {
 					width: 200,
@@ -145,6 +147,7 @@ export default {
 			{
 				class: 'button',
 				animation:'',
+				link: '',
 				style: {
 					width: 100,
 					height: 50,
@@ -175,6 +178,7 @@ export default {
 			{
 				class: 'input',
 				animation:'',
+				link: '',
 				content: '', //内容
 				style: {
 					width: 300,

@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router/index.js'
 import DatePicker from 'ant-design-vue';
-import BoxAtrr from './components/childComponents/Box/Attribute.vue'
+import BoxAtrr from './components/Attribute.vue'
 import 'ant-design-vue/dist/antd.css';
 import Animation from './components/Animation.vue'
 import { usePersist } from 'pinia-use-persist'

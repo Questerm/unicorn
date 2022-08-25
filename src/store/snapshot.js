@@ -1,6 +1,6 @@
 //用来存储撤回前的快照数据
 import { defineStore } from 'pinia'
-import { deepCopy } from '@/hooks/deepCopy'
+import { deepCopy } from '@/hooks/DeepCopy'
 import elStore from './elStore'
 
 export default defineStore('snapshot', {
@@ -38,17 +38,11 @@ export default defineStore('snapshot', {
         //生成新的快照
         recordSnapshot() {
             //添加新的快照
-            console.log('---生成新的快照---')
-            console.log(deepCopy(elStore().els))
             this.snapshotData[++this.snapshotIndex] = deepCopy(elStore().els);
             //在 undo 过程中，添加新的快照时，要将它后面的快照清理掉
             if (this.snapshotIndex < this.snapshotData.length - 1) {
                 this.snapshotData = this.snapshotData.slice(0, this.snapshotIndex + 1);
             }
-            console.log('---更新后的snapshotData数据---')
-            console.log(this.snapshotData)
-            console.log('---更新后的snapshotIndex索引---')
-            console.log(this.snapshotIndex)
         },
     }
 });

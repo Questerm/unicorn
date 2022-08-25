@@ -1,6 +1,6 @@
 <template>
 	<div class="projectPreview">
-		<div class="previewContent" :style="Style">
+		<div class="previewContent" :style="Style" ref="previewContent">
 			<!-- 矩形 -->
 			<div
 				v-for="p of els[0]"
@@ -9,6 +9,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			></div>
 			<!-- 文本 -->
 			<div
@@ -18,6 +19,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			>
 				{{ p.content }}
 			</div>
@@ -31,6 +33,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			/>
 			<!-- 按钮 -->
 			<button
@@ -40,6 +43,7 @@
 				:style="{
 					...styleFormat({ ...p.style }, 'btn'),
 				}"
+				@click="addClickEvent(p)"
 			>
 				<a :href="p.other.href">{{ p.other.content }}</a>
 			</button>
@@ -54,6 +58,7 @@
 				:type="p.type"
 				v-model="p.content"
 				:placeholder="p.tip"
+				@click="addClickEvent(p)"
 			/>
 		</div>
 	</div>
@@ -67,6 +72,7 @@ import { useRoute } from 'vue-router'
 // import userStore from '@/store/userStore'
 import { getRecentlySave } from '@/api'
 import userStore from '@/store/userStore'
+import elStore from '@/store/elStore'
 
 export default {
 	setup() {
@@ -77,6 +83,7 @@ export default {
 		// const useElStore = elStore()
 		// let { els } = storeToRefs(useElStore)
 		const uStore = userStore()
+		const useElStore = elStore()
 
 		//样式格式化
 		function styleFormat(obj, type) {
@@ -114,8 +121,19 @@ export default {
 			Style.width = document.body.clientWidth + 'px'
 			getSaveByName()
 		})
+		
+		//添加点击事件
+		function addClickEvent(p) {
+			if (p.link === "") return
+			let index = p.link.slice(-1)
+			if (index == 1) {
+				window.location.href = p.link.slice(0, p.link.length-1);
+			} else {
+				alert(p.link.slice(0, p.link.length-1))
+			}
+		}
 
-		return { els, Style, styleFormat }
+		return { els, Style, styleFormat, addClickEvent }
 	},
 }
 </script>

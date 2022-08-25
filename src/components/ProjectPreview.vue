@@ -9,6 +9,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			></div>
 			<!-- 文本 -->
 			<div
@@ -18,6 +19,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			>
 				{{ p.content }}
 			</div>
@@ -31,6 +33,7 @@
 				:style="{
 					...styleFormat({ ...p.style }),
 				}"
+				@click="addClickEvent(p)"
 			/>
 			<!-- 按钮 -->
 			<button
@@ -40,6 +43,7 @@
 				:style="{
 					...styleFormat({ ...p.style }, 'btn'),
 				}"
+				@click="addClickEvent(p)"
 			>
 				<a :href="p.other.href">{{ p.other.content }}</a>
 			</button>
@@ -54,6 +58,7 @@
 				:type="p.other.type"
 				v-model="p.content"
 				:placeholder="p.other.tip"
+				@click="addClickEvent(p)"
 			/>
 		</div>
 	</div>
@@ -93,11 +98,23 @@ export default {
 			width: '0px',
 		})
 
+		//添加点击事件
+		function addClickEvent(p) {
+			if (p.link === '') return
+			console.log(111)
+			let index = p.link.slice(-1)
+			if (index == 1) {
+				window.location.href = p.link.slice(0, p.link.length-1);
+			} else {
+				alert(p.link.slice(0, p.link.length-1))
+			}
+		}
+
 		onMounted(() => {
 			Style.width = document.body.clientWidth + 'px'
 		})
 
-		return { els, Style, styleFormat }
+		return { els, Style, styleFormat, addClickEvent }
 	},
 }
 </script>

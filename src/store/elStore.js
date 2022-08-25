@@ -10,10 +10,11 @@ export default defineStore('mystore', {
             els: [],
             elsIdx: new Array(2).fill(-1), //当前
             rectStyle: { style: {} },
-            img: null,
             editorScroll: 0,
             rectValue: null,
-            rectIsShow: false
+            rectIsShow: false,
+            maskLayerValue: null,
+            judgeIsShow: false,
         }
     },
     getters: {},
