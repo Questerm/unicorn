@@ -40,7 +40,7 @@
 									:style="{ fontSize: '23px', color: '#8dbe10' }"
 								/>
 								<span>新建项目</span>
-								<!-- <a-modal
+								<a-modal
 									:visible="addVisible"
 									title="新建项目"
 									@ok="addOk"
@@ -50,7 +50,7 @@
 										v-model:value="addValue"
 										placeholder="请输入项目名称"
 									/>
-								</a-modal> -->
+								</a-modal>
 							</div>
 						</div>
 					</div>
@@ -182,10 +182,10 @@ export default {
 		const addProject = () => {
 			addValue.value = ''
 			addVisible.value = true
-			router.push(`/editorPage/ `)
 		}
 		const addOk = () => {
 			addVisible.value = false
+			router.push(`/editorPage/${addValue.value}`)
 		}
 
 		//删除项目（需要确认）

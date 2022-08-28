@@ -122,10 +122,7 @@ export default defineComponent({
 			cover: '',
 		})
 		const save = () => {
-			saveVisible.value = true
-		}
-
-		const addOk = () => {
+			// saveVisible.value = true
 			const editorPlate = document.querySelector('.editorPlate')
 			saveData.username = uStore.username
 			console.log(els.value)
@@ -136,6 +133,8 @@ export default defineComponent({
 			saveVisible.value = false
 			createPreimg(editorPlate)
 		}
+
+		const addOk = () => {}
 
 		//生成预览图
 		function createPreimg(editorPlate) {

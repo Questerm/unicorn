@@ -1,6 +1,6 @@
 //用来存储撤回前的快照数据
 import { defineStore } from 'pinia'
-import { deepCopy } from '@/hooks/DeepCopy'
+import { deepCopy } from '@/hooks/deepCopy.js'
 import elStore from './elStore'
 
 export default defineStore('snapshot', {
