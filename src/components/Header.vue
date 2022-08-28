@@ -173,7 +173,7 @@ export default defineComponent({
 						projectName: projectName.value,
 					},
 				})
-				publishHref.value = 'http://localhost:8080/' + href
+				publishHref.value = 'http://112.74.166.87:8080/' + href
 			}
 		}
 		const pubOk = () => {
